@@ -1,0 +1,23 @@
+### Health Check
+GET http://localhost:8091/health
+
+### Login
+POST http://localhost:8091/login
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
+
+### Logout
+GET http://localhost:8091/logout/{userId}
+
+### Register
+POST http://localhost:8091/register
+Content-Type: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
