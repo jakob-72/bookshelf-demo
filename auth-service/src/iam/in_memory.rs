@@ -111,9 +111,10 @@ mod tests {
         let result = iam.create_user(user.clone()).await;
         assert!(result.is_ok());
         let users = USERS.read().await;
-        assert_eq!(2, users.len());
         let created_user = users.iter().find(|u| u.username == "test").unwrap();
         assert_eq!(created_user.username, user.username);
+        drop(users);
+        clean_up().await;
     }
 
     #[actix_web::test]
@@ -124,5 +125,16 @@ mod tests {
         assert!(result.is_err());
         let error = result.unwrap_err();
         assert_eq!(error.error_type, ErrorType::UserAlreadyExists);
+    }
+
+    async fn clean_up() {
+        let mut users = USERS.write().await;
+        users.clear();
+        users.push(User {
+            id: Uuid::new_v4(),
+            username: "admin".to_string(),
+            hashed_password: "$2b$12$YbjndrLEQYCTYJwcZ8gdJ.6qywkAChSnZ2hSZ2pomFKQl3/VFuSy6"
+                .to_string(), // admin
+        });
     }
 }

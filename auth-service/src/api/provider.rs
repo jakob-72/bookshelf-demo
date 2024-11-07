@@ -13,6 +13,9 @@ pub struct Provider {
 }
 
 impl Provider {
+    /// Create a new Provider with default implementations.
+    /// JWT secret and validity are read from the environment variables JWT_SECRET and JWT_VALIDITY_SECONDS.
+    /// The IAM implementation is an in-memory store.
     pub fn new() -> Self {
         let jwt_secret = std::env::var("JWT_SECRET").unwrap_or("secret".to_string());
         let jwt_validity = std::env::var("JWT_VALIDITY_SECONDS")

@@ -34,3 +34,30 @@ impl User {
         })
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const HASHED_TEST: &'static str =
+        "$2b$12$0VMPpuAbIef9G4LNRPOKbOah5BclZ4BPeMs/pYhYBXO3WK8Au/FGW";
+
+    #[test]
+    fn create_new() {
+        let user = User::create_new("test".to_string(), "test".to_string())
+            .expect("Failed to create user");
+        assert_eq!(user.username, "test");
+        assert_ne!(user.hashed_password, "test");
+    }
+
+    #[test]
+    fn verify_password() {
+        let user = User {
+            id: uuid::Uuid::new_v4(),
+            username: "test".to_string(),
+            hashed_password: HASHED_TEST.to_string(),
+        };
+        assert!(user.verify_password("test"));
+        assert!(!user.verify_password("wrong"));
+    }
+}
