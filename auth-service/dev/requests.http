@@ -6,8 +6,8 @@ POST http://localhost:8091/login
 Content-Type: application/json
 
 {
-  "username": "test",
-  "password": "test"
+  "username": "admin",
+  "password": "admin"
 }
 
 ### Logout

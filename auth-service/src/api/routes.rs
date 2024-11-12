@@ -14,10 +14,10 @@ type Result<T> = result::Result<T, ApiError>;
 
 /// Health check endpoint.
 /// # Success
-/// - Returns a `200 OK` response with the message "Up and running!".
+/// - Returns a `200 OK` response with the message "OK".
 #[get("/health")]
 pub async fn health() -> Result<&'static str> {
-    Ok("Up and running!")
+    Ok("OK")
 }
 
 /// Login endpoint.
