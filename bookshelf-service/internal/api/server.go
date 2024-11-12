@@ -36,6 +36,7 @@ func Start(provider shared.Provider, addr string, jwtSecret string) error {
 	// Routes (authenticated)
 	app.Get("/books", GetBooks)
 	app.Post("/books", CreateBook)
+	app.Put("/books/:id", UpdateBook)
 
 	// Start server
 	return app.Listen(addr)

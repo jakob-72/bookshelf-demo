@@ -65,6 +65,32 @@ func readUserIdFromClaims(c *fiber.Ctx) (string, error) {
 	return userId, nil
 }
 
+// UpdateBook updates a book for the user - Authenticated user is required
+// Success: 200 - Returns the updated book
+// Error: 400 - Bad Request - Malformed request body
+// Error: 401 - Unauthorized
+// Error: 404 - Not Found - Book not found
+func UpdateBook(c *fiber.Ctx) error {
+	userId, err := readUserIdFromClaims(c)
+	if err != nil {
+		return c.SendStatus(fiber.StatusUnauthorized)
+	}
+
+	bookId := c.Params("id")
+	var body dto.UpdateBookRequest
+	if err := c.BodyParser(&body); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
+	}
+
+	useCase := Provider.UpdateBook
+	book, err := useCase.UpdateBook(userId, bookId, body)
+	if err != nil {
+		return c.Status(handleError(err)).SendString(err.Error())
+	}
+
+	return c.JSON(book)
+}
+
 func handleError(err error) int {
 	var databaseError *domain.UseCaseError
 	switch {

@@ -24,6 +24,7 @@ func main() {
 	provider := shared.Provider{
 		GetBooks:   domain.NewGetBooksUseCase(),
 		CreateBook: domain.NewCreateBookUseCase(),
+		UpdateBook: domain.NewUpdateBookUseCase(),
 	}
 	if err := api.Start(provider, PORT, jwtSecret); err != nil {
 		slog.Error("failed to start server", "error", err)

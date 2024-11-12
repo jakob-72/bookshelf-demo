@@ -1,3 +1,4 @@
+// Package domain contains the business logic of the application
 package domain
 
 import (
@@ -53,7 +54,6 @@ func (useCase createBookUseCase) CreateBook(userId string, bookToCreate dto.Crea
 	}
 
 	db.Create(&book)
-
 	return book, nil
 }
 

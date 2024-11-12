@@ -7,4 +7,5 @@ import "bookshelf-service/internal/domain"
 type Provider struct {
 	GetBooks   domain.GetBooksUseCase
 	CreateBook domain.CreateBookUseCase
+	UpdateBook domain.UpdateBookUseCase
 }
