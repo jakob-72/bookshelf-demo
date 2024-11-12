@@ -91,6 +91,26 @@ func UpdateBook(c *fiber.Ctx) error {
 	return c.JSON(book)
 }
 
+// DeleteBook deletes a book for the user - Authenticated user is required
+// Success: 204 - No Content
+// Error: 401 - Unauthorized
+// Error: 404 - Not Found - Book not found
+func DeleteBook(c *fiber.Ctx) error {
+	userId, err := readUserIdFromClaims(c)
+	if err != nil {
+		return c.SendStatus(fiber.StatusUnauthorized)
+	}
+
+	bookId := c.Params("id")
+	useCase := Provider.DeleteBook
+	err = useCase.DeleteBook(userId, bookId)
+	if err != nil {
+		return c.Status(handleError(err)).SendString(err.Error())
+	}
+
+	return c.SendStatus(fiber.StatusNoContent)
+}
+
 func handleError(err error) int {
 	var databaseError *domain.UseCaseError
 	switch {

@@ -1,3 +1,4 @@
+// Package database contains the database implementation (SQLite in this demo)
 package database
 
 import (

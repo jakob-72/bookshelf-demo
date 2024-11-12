@@ -26,6 +26,7 @@ func main() {
 		GetBooks:   domain.NewGetBooksUseCase(repository),
 		CreateBook: domain.NewCreateBookUseCase(repository),
 		UpdateBook: domain.NewUpdateBookUseCase(repository),
+		DeleteBook: domain.NewDeleteBookUseCase(repository),
 	}
 	if err := api.Start(provider, PORT, jwtSecret); err != nil {
 		slog.Error("failed to start server", "error", err)
