@@ -4,8 +4,6 @@ package domain
 import (
 	"bookshelf-service/internal/database"
 	"bookshelf-service/internal/domain/models"
-	"fmt"
-	"slices"
 )
 
 // GetBooksUseCase is the interface that provides the GetBooks method
@@ -13,32 +11,23 @@ type GetBooksUseCase interface {
 	GetBooks(userId string, filter map[string]string) ([]models.Book, error)
 }
 
-type getBooksUseCase struct{}
+type getBooksUseCase struct {
+	repository database.Repository
+}
 
-var filterableColumns = []string{"title", "author", "genre", "read", "rating"}
-
-func (useCase getBooksUseCase) GetBooks(userId string, filter map[string]string) ([]models.Book, error) {
-	db, err := database.GetConnection()
+func (useCase *getBooksUseCase) GetBooks(userId string, filter map[string]string) ([]models.Book, error) {
+	books, err := useCase.repository.GetBook(userId, filter)
 	if err != nil {
 		return nil, &UseCaseError{
-			Code:    ConnectionError,
+			Code:    InternalError,
 			Message: err.Error(),
 		}
 	}
-
-	var books []models.Book
-	query := db.Where("user_id = ?", userId)
-	for key, value := range filter {
-		if slices.Contains(filterableColumns, key) {
-			query = query.Where(fmt.Sprintf("%s = ?", key), value)
-		}
-	}
-	query.Find(&books)
 
 	return books, nil
 }
 
 // NewGetBooksUseCase creates an implementation of the GetBooksUseCase
-func NewGetBooksUseCase() GetBooksUseCase {
-	return getBooksUseCase{}
+func NewGetBooksUseCase(repository database.Repository) GetBooksUseCase {
+	return &getBooksUseCase{repository}
 }

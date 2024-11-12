@@ -5,7 +5,6 @@ import (
 	"bookshelf-service/internal/database"
 	"bookshelf-service/internal/domain/dto"
 	"bookshelf-service/internal/domain/models"
-	"github.com/google/uuid"
 )
 
 // CreateBookUseCase is the interface that provides the CreateBook method
@@ -13,9 +12,11 @@ type CreateBookUseCase interface {
 	CreateBook(userId string, book dto.CreateBookRequest) (models.Book, error)
 }
 
-type createBookUseCase struct{}
+type createBookUseCase struct {
+	repository database.Repository
+}
 
-func (useCase createBookUseCase) CreateBook(userId string, bookToCreate dto.CreateBookRequest) (models.Book, error) {
+func (useCase *createBookUseCase) CreateBook(userId string, bookToCreate dto.CreateBookRequest) (models.Book, error) {
 	// validate the input
 	err := bookToCreate.Validate()
 	if err != nil {
@@ -25,39 +26,33 @@ func (useCase createBookUseCase) CreateBook(userId string, bookToCreate dto.Crea
 		}
 	}
 
-	// get a connection to the database
-	db, err := database.GetConnection()
+	// check if the book already exists
+	book, err := useCase.repository.GetBookByTitleAndAuthor(userId, bookToCreate.Title, bookToCreate.Author)
 	if err != nil {
 		return models.Book{}, &UseCaseError{
-			Code:    ConnectionError,
+			Code:    InternalError,
 			Message: err.Error(),
 		}
 	}
-
-	// check if the book already exists
-	var books []models.Book
-	db.Where("user_id = ?", userId).Where("title = ?", bookToCreate.Title).Where("author = ?", bookToCreate.Author).Find(&books)
-	if len(books) > 0 {
+	if book.ID != "" {
 		return models.Book{}, &UseCaseError{
 			Code:    AlreadyExists,
-			Message: "book already exists",
+			Message: "Book already exists",
 		}
 	}
 
 	// create the book in the database
-	book := models.Book{
-		ID:     uuid.NewString(),
-		UserID: userId,
-		Title:  bookToCreate.Title,
-		Author: bookToCreate.Author,
-		Genre:  bookToCreate.Genre,
+	book, err = useCase.repository.CreateBook(userId, bookToCreate.Title, bookToCreate.Author, bookToCreate.Genre, bookToCreate.Read, bookToCreate.Rating)
+	if err != nil {
+		return models.Book{}, &UseCaseError{
+			Code:    InternalError,
+			Message: err.Error(),
+		}
 	}
-
-	db.Create(&book)
 	return book, nil
 }
 
 // NewCreateBookUseCase creates an implementation of the CreateBookUseCase
-func NewCreateBookUseCase() CreateBookUseCase {
-	return createBookUseCase{}
+func NewCreateBookUseCase(repository database.Repository) CreateBookUseCase {
+	return &createBookUseCase{repository}
 }

@@ -2,11 +2,10 @@
 package domain
 
 const (
-	NotFound = iota
-	ConnectionError
+	InternalError = iota
+	NotFound
 	AlreadyExists
 	InvalidData
-	Unknown
 )
 
 // UseCaseError is a custom error type that represents errors that occur in the domain layer while operating the database

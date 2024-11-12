@@ -100,7 +100,7 @@ func handleError(err error) int {
 		switch dbe.Code {
 		case domain.NotFound:
 			return fiber.StatusNotFound
-		case domain.ConnectionError:
+		case domain.InternalError:
 			return fiber.StatusInternalServerError
 		case domain.AlreadyExists:
 			return fiber.StatusConflict
