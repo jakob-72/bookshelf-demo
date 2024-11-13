@@ -28,7 +28,7 @@ func Initialize(provider shared.Provider, jwtSecret string) *fiber.App {
 	}))
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: "*",
-		AllowMethods: "GET, POST, PUT, DELETE",
+		AllowMethods: "GET, POST, PUT, DELETE, OPTIONS",
 	}))
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey: jwtware.SigningKey{Key: []byte(jwtSecret)},
