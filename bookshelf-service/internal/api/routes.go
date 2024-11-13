@@ -124,6 +124,8 @@ func handleError(err error) int {
 			return fiber.StatusInternalServerError
 		case domain.AlreadyExists:
 			return fiber.StatusConflict
+		case domain.InvalidData:
+			return fiber.StatusUnprocessableEntity
 		default:
 			return fiber.StatusInternalServerError
 		}

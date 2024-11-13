@@ -4,7 +4,7 @@ package models
 // Book represents a book in the application and database
 type Book struct {
 	ID     string `json:"id" gorm:"primarykey"`
-	UserID string `json:"userId"`
+	UserID string `json:"-"`
 	Title  string `json:"title"`
 	Author string `json:"author"`
 	Genre  string `json:"genre"`

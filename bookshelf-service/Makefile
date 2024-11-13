@@ -10,7 +10,7 @@ format: ## Format the code
 .PHONY: clean
 clean: ## Clean up the project
 	@rm -rf bin
-	@rm books.db
+	@rm -f books.db
 	@go clean -testcache
 
 .PHONY: test

@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-const PORT = ":8090"
+const ADDR = ":8090"
 
 func main() {
 	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stdout, nil)))
@@ -28,7 +28,8 @@ func main() {
 		UpdateBook: domain.NewUpdateBookUseCase(repository),
 		DeleteBook: domain.NewDeleteBookUseCase(repository),
 	}
-	if err := api.Start(provider, PORT, jwtSecret); err != nil {
+	app := api.Initialize(provider, jwtSecret)
+	if err := api.Start(app, ADDR); err != nil {
 		slog.Error("failed to start server", "error", err)
 		os.Exit(1)
 	}

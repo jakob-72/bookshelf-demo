@@ -14,8 +14,9 @@ import (
 // Provider holds the reference to a `shared.Provider` instance
 var Provider shared.Provider
 
-// Start starts the API server
-func Start(provider shared.Provider, addr string, jwtSecret string) error {
+// Initialize initializes the API server with the given provider and JWT secret
+// Returns a new Fiber app instance
+func Initialize(provider shared.Provider, jwtSecret string) *fiber.App {
 	app := fiber.New()
 	Provider = provider
 
@@ -31,6 +32,9 @@ func Start(provider shared.Provider, addr string, jwtSecret string) error {
 	}))
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey: jwtware.SigningKey{Key: []byte(jwtSecret)},
+		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+			return ctx.Status(fiber.StatusUnauthorized).SendString(err.Error())
+		},
 	}))
 
 	// Routes (authenticated)
@@ -39,6 +43,10 @@ func Start(provider shared.Provider, addr string, jwtSecret string) error {
 	app.Put("/books/:id", UpdateBook)
 	app.Delete("/books/:id", DeleteBook)
 
-	// Start server
+	return app
+}
+
+// Start starts the API server
+func Start(app *fiber.App, addr string) error {
 	return app.Listen(addr)
 }
