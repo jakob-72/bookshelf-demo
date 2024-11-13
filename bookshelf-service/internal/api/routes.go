@@ -11,6 +11,17 @@ import (
 	"log/slog"
 )
 
+// CheckToken checks the validity of the JWT token
+// Success: 200 - Token is valid for this service
+// Error: 401 - Unauthorized
+func CheckToken(c *fiber.Ctx) error {
+	_, err := readUserIdFromClaims(c)
+	if err != nil {
+		return c.SendStatus(fiber.StatusUnauthorized)
+	}
+	return c.SendStatus(fiber.StatusOK)
+}
+
 // GetBooks returns all books for the user - Authenticated user is required
 // Success: 200 - Returns a list of books
 // Error: 401 - Unauthorized

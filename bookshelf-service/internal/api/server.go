@@ -38,6 +38,7 @@ func Initialize(provider shared.Provider, jwtSecret string) *fiber.App {
 	}))
 
 	// Routes (authenticated)
+	app.Get("/check", CheckToken)
 	app.Get("/books", GetBooks)
 	app.Post("/books", CreateBook)
 	app.Put("/books/:id", UpdateBook)
