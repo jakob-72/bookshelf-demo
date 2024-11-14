@@ -10,24 +10,26 @@ class StartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Consumer<StartPageModel>(
-        builder: (BuildContext context, StartPageModel model, Widget? _) =>
-            Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.menu_book,
-                  size: 100,
-                  color: Colors.grey[400],
-                ),
-                const Gap(16),
-                CircularProgressIndicator(
-                  color: Colors.grey[400],
-                ),
-              ],
+        builder: (BuildContext context, StartPageModel model, Widget? _) {
+          model.onStart();
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.menu_book,
+                    size: 100,
+                    color: Colors.grey[400],
+                  ),
+                  const Gap(16),
+                  CircularProgressIndicator(
+                    color: Colors.grey[400],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
 }
