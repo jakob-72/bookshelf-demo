@@ -33,3 +33,6 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlMjcyOTFjN
 ### Delete Book
 DELETE http://localhost:8090/books/48d60d77-0980-4bd4-9082-75e292469826
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJlMjcyOTFjNC0xODhmLTRhY2EtYWE1Zi1kYzFkZmJmZWRmNzQiLCJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3MzE0MDI3MDksImV4cCI6MTg4NjIzMTUwOX0.SDQnskZmG56Tq3Ysyw08TZXkNBpTrPsb1mPexRwRoDI
+
+### Preflight
+OPTIONS http://localhost:8090/books

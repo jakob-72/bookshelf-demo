@@ -122,6 +122,12 @@ func DeleteBook(c *fiber.Ctx) error {
 	return c.SendStatus(fiber.StatusNoContent)
 }
 
+// Preflight is a handler for preflight requests
+// Success: 200 - OK
+func Preflight(c *fiber.Ctx) error {
+	return c.SendStatus(fiber.StatusOK)
+}
+
 func handleError(err error) int {
 	var databaseError *domain.UseCaseError
 	switch {

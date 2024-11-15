@@ -30,6 +30,7 @@ func Initialize(provider shared.Provider, jwtSecret string) *fiber.App {
 		AllowOrigins: "*",
 		AllowMethods: "GET, POST, PUT, DELETE, OPTIONS",
 	}))
+	app.Options("/*", Preflight)
 	app.Use(jwtware.New(jwtware.Config{
 		SigningKey: jwtware.SigningKey{Key: []byte(jwtSecret)},
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
