@@ -1,9 +1,10 @@
 import 'package:auto_route/annotations.dart';
 import 'package:bookshelf_app/data/dto/get_books_response.dart';
-import 'package:bookshelf_app/data/models/book.dart';
+import 'package:bookshelf_app/pages/books_overview_page/book_list.dart';
 import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
 import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,9 @@ class BookOverviewPage extends StatelessWidget {
           body: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: BookOverviewBody(model: model),
+              child: BookOverviewBody(
+                model: model,
+              ),
             ),
           ),
         ),
@@ -45,10 +48,10 @@ class BookOverviewBody extends StatefulWidget {
 class _BookOverviewBodyState extends State<BookOverviewBody> {
   GetBooksResponse? result;
 
-  _BookOverviewBodyState() {
-    widget.model.getBooks().then((result) => setState(() {
-          this.result = result;
-        }));
+  @override
+  void initState() {
+    super.initState();
+    widget.model.getBooks().then((res) => setState(() => result = res));
   }
 
   @override
@@ -61,13 +64,16 @@ class _BookOverviewBodyState extends State<BookOverviewBody> {
             widget.model.navigateToLoginPage();
           }
           if (result is GetBooksResponseError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text((result as GetBooksResponseError).message),
-                duration: const Duration(seconds: 5),
+            SchedulerBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text((result as GetBooksResponseError).message),
+                  duration: const Duration(seconds: 5),
+                ),
               ),
             );
             return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('An error occurred'),
                 const Gap(16),
@@ -83,18 +89,12 @@ class _BookOverviewBodyState extends State<BookOverviewBody> {
             );
           }
           if (result is GetBooksResponseSuccess) {
-            return BookList(books: (result as GetBooksResponseSuccess).books);
+            final books = (result as GetBooksResponseSuccess).books;
+            return BookList(
+              books: books,
+            );
           }
           return const SizedBox.shrink();
         },
       );
-}
-
-class BookList extends StatelessWidget {
-  final List<Book> books;
-
-  const BookList({super.key, required this.books});
-
-  @override
-  Widget build(BuildContext context) => const Text("TODO: BookList");
 }

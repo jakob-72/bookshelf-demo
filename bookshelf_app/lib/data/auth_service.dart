@@ -10,10 +10,14 @@ class AuthService {
   Future<AuthResponse> login(String username, String password) async {
     const operation = 'AuthService_login';
     try {
-      final response = await dio.post('/login', data: {
-        'username': username,
-        'password': password,
-      });
+      final response = await dio.post(
+        '/login',
+        data: {
+          'username': username,
+          'password': password,
+        },
+        options: Options(validateStatus: (_) => true),
+      );
       if (response.statusCode == 200) {
         return AuthResponseSuccess(response.data['token']);
       } else if (response.statusCode == 401) {

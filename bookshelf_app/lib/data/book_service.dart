@@ -34,6 +34,7 @@ class BookService {
         path,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
+          validateStatus: (_) => true,
         ),
       );
       if (response.statusCode == 200) {
