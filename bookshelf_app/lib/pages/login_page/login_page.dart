@@ -1,9 +1,10 @@
 import 'package:auto_route/annotations.dart';
-import 'package:bookshelf_app/data/dto/auth_response.dart';
 import 'package:bookshelf_app/pages/login_page/login_page_model.dart';
+import 'package:bookshelf_app/pages/login_page/state.dart';
+import 'package:bookshelf_app/shared/extensions.dart';
 import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
@@ -14,30 +15,21 @@ class LoginPage extends StatelessWidget {
   const LoginPage({super.key, this.unauthorized = false});
 
   @override
-  Widget build(BuildContext context) => Consumer<LoginPageModel>(
-        builder: (BuildContext context, LoginPageModel model, Widget? _) {
+  Widget build(BuildContext context) => Builder(
+        builder: (_) {
           if (unauthorized) {
-            SchedulerBinding.instance.addPostFrameCallback(
-              (_) => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Center(
-                    child: Text('You need to login to access this page'),
-                  ),
-                  duration: Duration(seconds: 5),
-                ),
-              ),
-            );
+            context.showSnackbar('Please login to continue');
           }
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Login', style: headline1),
-                  const Gap(16),
+                  Text('Login', style: headline1),
+                  Gap(16),
                   Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: LoginForm(model: model),
+                    padding: EdgeInsets.all(8),
+                    child: LoginForm(),
                   ),
                 ],
               ),
@@ -48,9 +40,7 @@ class LoginPage extends StatelessWidget {
 }
 
 class LoginForm extends StatefulWidget {
-  final LoginPageModel model;
-
-  const LoginForm({super.key, required this.model});
+  const LoginForm({super.key});
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -61,128 +51,88 @@ class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  AuthResponse? result;
-  var isLoading = false;
-
   @override
-  void initState() {
-    super.initState();
-    widget.model.addListener(
-      () => setState(
-        () {
-          isLoading = false;
-          result = widget.model.result;
+  Widget build(BuildContext context) =>
+      StateNotifierProvider<LoginPageModel, LoginPageState>(
+        create: (_) => LoginPageModel(),
+        builder: (context, _) {
+          final model = context.read<LoginPageModel>();
+          final state = context.watch<LoginPageState>();
+          if (state is Loading) {
+            return const CircularProgressIndicator();
+          }
+
+          if (state is Success) {
+            model.navigateToBooksPage();
+          } else if (state is Error) {
+            context.showSnackbar(state.message);
+          }
+
+          return ConstrainedBox(
+            constraints: const BoxConstraints(
+              minWidth: 400,
+              maxWidth: 640,
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: _usernameController,
+                    keyboardType: TextInputType.name,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your username';
+                      }
+                      return null;
+                    },
+                    decoration: inputDecoration('Username'),
+                  ),
+                  const Gap(16),
+                  TextFormField(
+                    controller: _passwordController,
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your password';
+                      }
+                      return null;
+                    },
+                    decoration: inputDecoration('Password'),
+                  ),
+                  const Gap(16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (!_formKey.currentState!.validate()) {
+                          return;
+                        }
+                        model.login(
+                          _usernameController.text,
+                          _passwordController.text,
+                        );
+                      },
+                      child: Text(
+                        'Login',
+                        style: buttonText,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
         },
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (isLoading) {
-      return const CircularProgressIndicator();
-    }
-
-    if (result != null) {
-      if (result is AuthResponseSuccess) {
-        widget.model.navigateToBooksPage();
-      } else {
-        String message = 'Username or password is incorrect';
-        if (result is AuthResponseInternalError) {
-          message = (result as AuthResponseInternalError).message;
-        }
-        SchedulerBinding.instance.addPostFrameCallback(
-          (_) => ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Center(
-                child: Text(message),
-              ),
-              duration: const Duration(milliseconds: 2500),
-            ),
-          ),
-        );
-      }
-    }
-
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        minWidth: 400,
-        maxWidth: 640,
-      ),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextFormField(
-              controller: _usernameController,
-              keyboardType: TextInputType.name,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your username';
-                }
-                return null;
-              },
-              decoration: _inputDecoration('Username'),
-            ),
-            const Gap(16),
-            TextFormField(
-              controller: _passwordController,
-              keyboardType: TextInputType.visiblePassword,
-              obscureText: true,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter your password';
-                }
-                return null;
-              },
-              decoration: _inputDecoration('Password'),
-            ),
-            const Gap(16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (isLoading) {
-                    return;
-                  }
-                  if (!_formKey.currentState!.validate()) {
-                    return;
-                  }
-                  setState(() => isLoading = true);
-                  widget.model.login(
-                    _usernameController.text,
-                    _passwordController.text,
-                  );
-                },
-                child: Text(
-                  'Login',
-                  style: buttonText,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      );
 
   @override
   dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
-    widget.model.dispose();
     super.dispose();
   }
-
-  InputDecoration _inputDecoration(String label) => InputDecoration(
-        label: Text(label),
-        hintText: label,
-        labelStyle: const TextStyle(color: Colors.white),
-        fillColor: Colors.white,
-        hintStyle: TextStyle(color: Colors.grey[350]),
-        focusColor: Colors.grey[400],
-        hoverColor: Colors.grey[400],
-      );
 }

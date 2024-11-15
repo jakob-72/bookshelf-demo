@@ -40,6 +40,8 @@ dependencies:
   gap: ^3.0.1
   provider: ^6.1.2
   shared_preferences: ^2.3.3
+  state_notifier: ^1.0.0
+  flutter_state_notifier: ^1.0.0
 
 dev_dependencies:
   flutter_test:

@@ -5,8 +5,6 @@ import 'package:bookshelf_app/data/local_storage.dart';
 import 'package:bookshelf_app/domain/check_token_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
 import 'package:bookshelf_app/domain/login_use_case.dart';
-import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
-import 'package:bookshelf_app/pages/login_page/login_page_model.dart';
 import 'package:bookshelf_app/pages/start_page/start_page_model.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:flutter/material.dart';
@@ -47,28 +45,16 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => MultiProvider(
         providers: [
           ListenableProvider<AppRouter>.value(value: router),
+          Provider<LoginUseCase>.value(
+            value: LoginUseCase(authService, storage),
+          ),
+          Provider<GetBooksUseCase>.value(
+            value: GetBooksUseCase(storage: storage, bookService: bookService),
+          ),
           Provider<StartPageModel>.value(
             value: StartPageModel(
               router: router,
               useCase: CheckTokenUseCase(
-                storage: storage,
-                bookService: bookService,
-              ),
-            ),
-          ),
-          ChangeNotifierProvider<LoginPageModel>.value(
-            value: LoginPageModel(
-              router: router,
-              useCase: LoginUseCase(
-                authService,
-                storage,
-              ),
-            ),
-          ),
-          ChangeNotifierProvider<BookOverviewPageModel>.value(
-            value: BookOverviewPageModel(
-              router: router,
-              useCase: GetBooksUseCase(
                 storage: storage,
                 bookService: bookService,
               ),

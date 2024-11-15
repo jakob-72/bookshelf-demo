@@ -1,22 +1,40 @@
 import 'package:bookshelf_app/data/dto/get_books_response.dart';
+import 'package:bookshelf_app/data/models/book.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
+import 'package:bookshelf_app/pages/books_overview_page/state.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:bookshelf_app/shared/app_router.gr.dart';
-import 'package:flutter/material.dart';
+import 'package:state_notifier/state_notifier.dart';
 
-class BookOverviewPageModel extends ChangeNotifier {
-  final AppRouter router;
-  final GetBooksUseCase useCase;
+final initialState = Idle([]);
 
-  GetBooksResponse? _result;
+class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
+    with LocatorMixin {
+  BookOverviewPageModel() : super(initialState);
 
-  GetBooksResponse? get result => _result;
+  AppRouter get router => read<AppRouter>();
 
-  BookOverviewPageModel({required this.router, required this.useCase});
+  GetBooksUseCase get getBooksUseCase => read<GetBooksUseCase>();
+
+  List<Book> _books = [];
+
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
 
   Future<void> refresh() async {
-    _result = await useCase.getBooks();
-    notifyListeners();
+    state = Loading(_books);
+    final result = await getBooksUseCase.getBooks();
+    if (result is GetBooksResponseSuccess) {
+      _books = result.books;
+      state = Changed(_books);
+    } else if (result is GetBooksResponseUnauthorized) {
+      navigateToLoginPage();
+    } else {
+      state = Error(_books, (result as GetBooksResponseError).message);
+    }
   }
 
   void navigateToLoginPage() => router.replace(LoginRoute(unauthorized: true));

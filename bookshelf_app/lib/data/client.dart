@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 mixin Client {
   static Dio get(String baseUrl) {
@@ -9,9 +8,6 @@ mixin Client {
     dio.options.headers = {
       'Content-Type': 'application/json',
     };
-    if (kDebugMode) {
-      dio.interceptors.add(LogInterceptor(responseBody: true));
-    }
 
     return dio;
   }

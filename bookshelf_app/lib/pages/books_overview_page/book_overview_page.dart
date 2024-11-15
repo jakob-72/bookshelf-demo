@@ -1,10 +1,11 @@
 import 'package:auto_route/annotations.dart';
-import 'package:bookshelf_app/data/dto/get_books_response.dart';
 import 'package:bookshelf_app/pages/books_overview_page/book_list.dart';
 import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
+import 'package:bookshelf_app/pages/books_overview_page/state.dart';
+import 'package:bookshelf_app/shared/extensions.dart';
 import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
@@ -13,96 +14,57 @@ class BookOverviewPage extends StatelessWidget {
   const BookOverviewPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Consumer<BookOverviewPageModel>(
-        builder: (
-          BuildContext context,
-          BookOverviewPageModel model,
-          Widget? _,
-        ) =>
-            Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.grey[850],
-            title: const Text('My Books', style: headline1),
-          ),
-          body: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: BookOverviewBody(
-                model: model,
-              ),
-            ),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.grey[850],
+          title: const Text('My Books', style: headline1),
+        ),
+        body: const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: BookOverviewBody(),
           ),
         ),
       );
 }
 
 class BookOverviewBody extends StatefulWidget {
-  final BookOverviewPageModel model;
-
-  const BookOverviewBody({super.key, required this.model});
+  const BookOverviewBody({super.key});
 
   @override
   State<BookOverviewBody> createState() => _BookOverviewBodyState();
 }
 
 class _BookOverviewBodyState extends State<BookOverviewBody> {
-  GetBooksResponse? result;
-
   @override
-  void initState() {
-    super.initState();
-    widget.model.addListener(
-      () => setState(() => result = widget.model.result),
-    );
-    widget.model.refresh();
-  }
+  Widget build(BuildContext context) =>
+      StateNotifierProvider<BookOverviewPageModel, BooksOverviewPageState>(
+        create: (_) => BookOverviewPageModel(),
+        builder: (context, _) {
+          final model = context.read<BookOverviewPageModel>();
+          final state = context.watch<BooksOverviewPageState>();
+          final books = state.books;
 
-  @override
-  Widget build(BuildContext context) => Builder(
-        builder: (context) {
-          if (result == null) {
+          if (state is Loading) {
             return const CircularProgressIndicator();
           }
-          if (result is GetBooksResponseUnauthorized) {
-            widget.model.navigateToLoginPage();
-          }
-          if (result is GetBooksResponseError) {
-            SchedulerBinding.instance.addPostFrameCallback(
-              (_) => ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text((result as GetBooksResponseError).message),
-                  duration: const Duration(seconds: 5),
-                ),
-              ),
-            );
+          if (state is Error) {
+            context.showSnackbar(state.message);
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text('An error occurred'),
                 const Gap(16),
                 ElevatedButton(
-                  onPressed: () {
-                    setState(() => result = null);
-                    widget.model.refresh();
-                  },
+                  onPressed: () => model.refresh(),
                   child: const Text('Retry'),
                 ),
               ],
             );
           }
-          if (result is GetBooksResponseSuccess) {
-            final books = (result as GetBooksResponseSuccess).books;
-            return BookList(
-              books: books,
-            );
-          }
-          return const SizedBox.shrink();
+          return BookList(
+            books: books,
+          );
         },
       );
-
-  @override
-  void dispose() {
-    widget.model.dispose();
-    super.dispose();
-  }
 }
