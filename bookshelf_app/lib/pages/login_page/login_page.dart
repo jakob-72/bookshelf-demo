@@ -8,26 +8,39 @@ import 'package:provider/provider.dart';
 
 @RoutePage()
 class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+  final bool unauthorized;
+
+  const LoginPage({super.key, this.unauthorized = false});
 
   @override
   Widget build(BuildContext context) => Consumer<LoginPageModel>(
-        builder: (BuildContext context, LoginPageModel model, Widget? _) =>
-            Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Login', style: headline1),
-                const Gap(16),
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: LoginForm(model: model),
+        builder: (BuildContext context, LoginPageModel model, Widget? _) {
+          if (unauthorized) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Center(
+                  child: Text('You need to login to access this page'),
                 ),
-              ],
+                duration: Duration(milliseconds: 2500),
+              ),
+            );
+          }
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Login', style: headline1),
+                  const Gap(16),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: LoginForm(model: model),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
 }
 

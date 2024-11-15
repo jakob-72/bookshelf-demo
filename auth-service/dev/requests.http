@@ -21,3 +21,6 @@ Content-Type: application/json
   "username": "test",
   "password": "test"
 }
+
+### Preflight
+OPTIONS http://localhost:8091/login

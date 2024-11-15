@@ -3,7 +3,9 @@ import 'package:bookshelf_app/data/book_service.dart';
 import 'package:bookshelf_app/data/client.dart';
 import 'package:bookshelf_app/data/local_storage.dart';
 import 'package:bookshelf_app/domain/check_token_use_case.dart';
+import 'package:bookshelf_app/domain/get_books_use_case.dart';
 import 'package:bookshelf_app/domain/login_use_case.dart';
+import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
 import 'package:bookshelf_app/pages/login_page/login_page_model.dart';
 import 'package:bookshelf_app/pages/start_page/start_page_model.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
@@ -60,6 +62,15 @@ class App extends StatelessWidget {
               useCase: LoginUseCase(
                 authService,
                 storage,
+              ),
+            ),
+          ),
+          Provider<BookOverviewPageModel>.value(
+            value: BookOverviewPageModel(
+              router: router,
+              useCase: GetBooksUseCase(
+                storage: storage,
+                bookService: bookService,
               ),
             ),
           ),

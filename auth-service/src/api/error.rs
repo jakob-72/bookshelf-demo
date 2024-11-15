@@ -32,7 +32,7 @@ impl ResponseError for ApiError {
 impl From<IAMError> for ApiError {
     fn from(value: IAMError) -> Self {
         let status_code = match value.error_type {
-            ErrorType::UserNotFound => StatusCode::NOT_FOUND,
+            ErrorType::UserNotFound => StatusCode::UNAUTHORIZED,
             ErrorType::UserAlreadyExists => StatusCode::CONFLICT,
             ErrorType::InvalidPassword => StatusCode::UNAUTHORIZED,
         };

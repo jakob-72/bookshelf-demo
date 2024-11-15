@@ -12,7 +12,7 @@ class StartPageModel {
     if (await useCase.hasValidToken()) {
       router.replace(const BookOverviewRoute());
     } else {
-      router.replace(const LoginRoute());
+      router.replace(LoginRoute());
     }
   }
 }

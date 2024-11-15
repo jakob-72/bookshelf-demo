@@ -6,7 +6,7 @@ use crate::models::auth_response::AuthResponse;
 use crate::models::user::User;
 use actix_web::http::StatusCode;
 use actix_web::web::{Data, Json, Path};
-use actix_web::{get, post, HttpResponse};
+use actix_web::{get, options, post, HttpResponse};
 use std::result;
 
 /// Convenience type for handling API results.
@@ -89,4 +89,12 @@ pub async fn register(
 
     iam.create_user(user).await?;
     Ok(HttpResponse::build(StatusCode::CREATED).finish())
+}
+
+/// Options endpoint for any path.
+/// # Success
+/// - Returns a `200 OK` response.
+#[options("/{tail:.*}")]
+pub async fn preflight() -> HttpResponse {
+    HttpResponse::Ok().finish()
 }

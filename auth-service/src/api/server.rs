@@ -1,6 +1,7 @@
 use crate::api::provider::Provider;
 use crate::api::routes;
-use actix_web::middleware::{DefaultHeaders, Logger};
+use actix_cors::Cors;
+use actix_web::middleware::Logger;
 use actix_web::{web, App, HttpServer};
 use std::{io, net};
 
@@ -10,15 +11,16 @@ pub async fn start<A: net::ToSocketAddrs>(addr: A) -> io::Result<()> {
         App::new()
             .app_data(web::Data::new(provider.clone()))
             .wrap(Logger::default())
-            .wrap(DefaultHeaders::new().add(("Access-Control-Allow-Origin", "*")))
+            .wrap(Cors::permissive())
             .service(routes::health)
             .service(routes::login)
             .service(routes::logout)
             .service(routes::register)
+            .service(routes::preflight)
     })
-    .bind(addr)?
-    .run()
-    .await
+        .bind(addr)?
+        .run()
+        .await
 }
 
 #[cfg(test)]
@@ -43,7 +45,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::login),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/login")
             .set_json(AuthRequest {
@@ -65,7 +67,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::login),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/login")
             .set_json(AuthRequest {
@@ -74,7 +76,7 @@ mod tests {
             })
             .to_request();
         let resp = test::call_service(&app, req).await;
-        assert_eq!(resp.status(), 404);
+        assert_eq!(resp.status(), 401);
     }
 
     #[actix_web::test]
@@ -85,7 +87,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::login),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/login")
             .set_json(AuthRequest {
@@ -105,7 +107,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::register),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/register")
             .set_json(AuthRequest {
@@ -125,7 +127,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::register),
         )
-        .await;
+            .await;
         let req = test::TestRequest::post()
             .uri("/register")
             .set_json(AuthRequest {
