@@ -56,7 +56,7 @@ class App extends StatelessWidget {
               ),
             ),
           ),
-          Provider<LoginPageModel>.value(
+          ChangeNotifierProvider<LoginPageModel>.value(
             value: LoginPageModel(
               router: router,
               useCase: LoginUseCase(
@@ -65,7 +65,7 @@ class App extends StatelessWidget {
               ),
             ),
           ),
-          Provider<BookOverviewPageModel>.value(
+          ChangeNotifierProvider<BookOverviewPageModel>.value(
             value: BookOverviewPageModel(
               router: router,
               useCase: GetBooksUseCase(

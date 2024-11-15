@@ -51,7 +51,10 @@ class _BookOverviewBodyState extends State<BookOverviewBody> {
   @override
   void initState() {
     super.initState();
-    widget.model.getBooks().then((res) => setState(() => result = res));
+    widget.model.addListener(
+      () => setState(() => result = widget.model.result),
+    );
+    widget.model.refresh();
   }
 
   @override
@@ -78,10 +81,9 @@ class _BookOverviewBodyState extends State<BookOverviewBody> {
                 const Text('An error occurred'),
                 const Gap(16),
                 ElevatedButton(
-                  onPressed: () async {
+                  onPressed: () {
                     setState(() => result = null);
-                    final res = await widget.model.getBooks();
-                    setState(() => result = res);
+                    widget.model.refresh();
                   },
                   child: const Text('Retry'),
                 ),
@@ -97,4 +99,10 @@ class _BookOverviewBodyState extends State<BookOverviewBody> {
           return const SizedBox.shrink();
         },
       );
+
+  @override
+  void dispose() {
+    widget.model.dispose();
+    super.dispose();
+  }
 }

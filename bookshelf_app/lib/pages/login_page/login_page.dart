@@ -61,96 +61,119 @@ class _LoginFormState extends State<LoginForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  AuthResponse? result;
   var isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.model.addListener(
+      () => setState(
+        () {
+          isLoading = false;
+          result = widget.model.result;
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
       return const CircularProgressIndicator();
-    } else {
-      return ConstrainedBox(
-        constraints: const BoxConstraints(
-          minWidth: 400,
-          maxWidth: 640,
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _usernameController,
-                keyboardType: TextInputType.name,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your username';
-                  }
-                  return null;
-                },
-                decoration: _inputDecoration('Username'),
+    }
+
+    if (result != null) {
+      if (result is AuthResponseSuccess) {
+        widget.model.navigateToBooksPage();
+      } else {
+        String message = 'Username or password is incorrect';
+        if (result is AuthResponseInternalError) {
+          message = (result as AuthResponseInternalError).message;
+        }
+        SchedulerBinding.instance.addPostFrameCallback(
+          (_) => ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Center(
+                child: Text(message),
               ),
-              const Gap(16),
-              TextFormField(
-                controller: _passwordController,
-                keyboardType: TextInputType.visiblePassword,
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter your password';
+              duration: const Duration(milliseconds: 2500),
+            ),
+          ),
+        );
+      }
+    }
+
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        minWidth: 400,
+        maxWidth: 640,
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextFormField(
+              controller: _usernameController,
+              keyboardType: TextInputType.name,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your username';
+                }
+                return null;
+              },
+              decoration: _inputDecoration('Username'),
+            ),
+            const Gap(16),
+            TextFormField(
+              controller: _passwordController,
+              keyboardType: TextInputType.visiblePassword,
+              obscureText: true,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter your password';
+                }
+                return null;
+              },
+              decoration: _inputDecoration('Password'),
+            ),
+            const Gap(16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (isLoading) {
+                    return;
                   }
-                  return null;
+                  if (!_formKey.currentState!.validate()) {
+                    return;
+                  }
+                  setState(() => isLoading = true);
+                  widget.model.login(
+                    _usernameController.text,
+                    _passwordController.text,
+                  );
                 },
-                decoration: _inputDecoration('Password'),
-              ),
-              const Gap(16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (isLoading) {
-                      return;
-                    }
-                    if (!_formKey.currentState!.validate()) {
-                      return;
-                    }
-                    setState(() => isLoading = true);
-                    final result = await widget.model.login(
-                      _usernameController.text,
-                      _passwordController.text,
-                    );
-                    setState(() => isLoading = false);
-                    if (result is AuthResponseSuccess) {
-                      widget.model.navigateToBooksPage();
-                    } else {
-                      String message = 'Username or password is incorrect';
-                      if (result is AuthResponseInternalError) {
-                        message = result.message;
-                      }
-                      if (!context.mounted) {
-                        return;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Center(
-                            child: Text(message),
-                          ),
-                          duration: const Duration(milliseconds: 2500),
-                        ),
-                      );
-                    }
-                  },
-                  child: Text(
-                    'Login',
-                    style: buttonText,
-                  ),
+                child: Text(
+                  'Login',
+                  style: buttonText,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  @override
+  dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    widget.model.dispose();
+    super.dispose();
   }
 
   InputDecoration _inputDecoration(String label) => InputDecoration(
