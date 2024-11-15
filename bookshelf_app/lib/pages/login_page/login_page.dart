@@ -3,6 +3,7 @@ import 'package:bookshelf_app/data/dto/auth_response.dart';
 import 'package:bookshelf_app/pages/login_page/login_page_model.dart';
 import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 
@@ -16,12 +17,14 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) => Consumer<LoginPageModel>(
         builder: (BuildContext context, LoginPageModel model, Widget? _) {
           if (unauthorized) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Center(
-                  child: Text('You need to login to access this page'),
+            SchedulerBinding.instance.addPostFrameCallback(
+              (_) => ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Center(
+                    child: Text('You need to login to access this page'),
+                  ),
+                  duration: Duration(seconds: 5),
                 ),
-                duration: Duration(milliseconds: 2500),
               ),
             );
           }
