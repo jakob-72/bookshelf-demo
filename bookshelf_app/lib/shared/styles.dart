@@ -6,6 +6,12 @@ const headline1 = TextStyle(
   color: Colors.grey,
 );
 
+const headline2 = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+  color: Colors.grey,
+);
+
 final buttonText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w600,

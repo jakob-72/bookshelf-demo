@@ -14,10 +14,6 @@ class Loading extends BooksOverviewPageState {
   Loading(super.books);
 }
 
-class Changed extends BooksOverviewPageState {
-  Changed(super.books);
-}
-
 class Error extends BooksOverviewPageState {
   final String message;
 

@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:bookshelf_app/pages/books_overview_page/add_book_dialog.dart';
 import 'package:bookshelf_app/pages/books_overview_page/book_list.dart';
 import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
 import 'package:bookshelf_app/pages/books_overview_page/state.dart';
@@ -14,42 +15,57 @@ class BookOverviewPage extends StatelessWidget {
   const BookOverviewPage({super.key});
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.grey[850],
-          title: const Text('My Books', style: headline1),
-        ),
-        body: const Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: BookOverviewBody(),
-          ),
-        ),
-      );
-}
-
-class BookOverviewBody extends StatefulWidget {
-  const BookOverviewBody({super.key});
-
-  @override
-  State<BookOverviewBody> createState() => _BookOverviewBodyState();
-}
-
-class _BookOverviewBodyState extends State<BookOverviewBody> {
-  @override
   Widget build(BuildContext context) =>
       StateNotifierProvider<BookOverviewPageModel, BooksOverviewPageState>(
         create: (_) => BookOverviewPageModel(),
         builder: (context, _) {
-          final model = context.read<BookOverviewPageModel>();
           final state = context.watch<BooksOverviewPageState>();
+          return Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.grey[850],
+                title: const Text('My Books', style: headline1),
+              ),
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: BookOverviewBody(state: state),
+                ),
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  if (state is Loading) {
+                    return;
+                  }
+                  showDialog(
+                    context: context,
+                    builder: (_) => AddBookDialog(
+                      model: context.read<BookOverviewPageModel>(),
+                    ),
+                  );
+                },
+                tooltip: 'Add a book',
+                child: const Icon(Icons.add),
+              ));
+        },
+      );
+}
+
+class BookOverviewBody extends StatelessWidget {
+  final BooksOverviewPageState state;
+
+  const BookOverviewBody({super.key, required this.state});
+
+  @override
+  Widget build(BuildContext context) => Builder(
+        builder: (context) {
+          final model = context.read<BookOverviewPageModel>();
           final books = state.books;
 
           if (state is Loading) {
             return const CircularProgressIndicator();
           }
           if (state is Error) {
-            context.showSnackbar(state.message);
+            context.showSnackbar((state as Error).message);
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

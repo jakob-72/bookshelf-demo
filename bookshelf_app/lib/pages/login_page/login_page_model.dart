@@ -17,11 +17,11 @@ class LoginPageModel extends StateNotifier<LoginPageState> with LocatorMixin {
   Future<void> login(String username, String password) async {
     state = Loading();
     final result = await useCase.login(username, password);
-    if (result is AuthResponseSuccess) {
+    if (result is AuthSuccess) {
       state = Success();
     } else {
       String message = 'Username or password is incorrect';
-      if (result is AuthResponseInternalError) {
+      if (result is AuthError) {
         message = result.message;
       }
       state = Error(message);

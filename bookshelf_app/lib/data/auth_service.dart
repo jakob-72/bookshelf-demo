@@ -19,20 +19,19 @@ class AuthService {
         options: Options(validateStatus: (_) => true),
       );
       if (response.statusCode == 200) {
-        return AuthResponseSuccess(response.data['token']);
+        return AuthSuccess(response.data['token']);
       } else if (response.statusCode == 401) {
-        return AuthResponseUnauthorized();
+        return Unauthorized();
       } else {
         Logger.log(
           'Authentication error - ${response.statusCode}: ${response.data}',
           operation: operation,
         );
-        return AuthResponseInternalError(
-            '${response.statusCode}: ${response.data}');
+        return AuthError('${response.statusCode}: ${response.data}');
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return AuthResponseInternalError(e.message ?? 'Internal error');
+      return AuthError(e.message ?? 'Internal error');
     }
   }
 }

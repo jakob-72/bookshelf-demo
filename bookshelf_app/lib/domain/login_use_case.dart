@@ -10,7 +10,7 @@ class LoginUseCase {
 
   Future<AuthResponse> login(String username, String password) async {
     final result = await _authService.login(username, password);
-    if (result is AuthResponseSuccess) {
+    if (result is AuthSuccess) {
       _localStorage.setToken(result.token);
     }
     return result;

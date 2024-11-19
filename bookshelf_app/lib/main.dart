@@ -2,6 +2,7 @@ import 'package:bookshelf_app/data/auth_service.dart';
 import 'package:bookshelf_app/data/book_service.dart';
 import 'package:bookshelf_app/data/client.dart';
 import 'package:bookshelf_app/data/local_storage.dart';
+import 'package:bookshelf_app/domain/add_book_use_case.dart';
 import 'package:bookshelf_app/domain/check_token_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
 import 'package:bookshelf_app/domain/login_use_case.dart';
@@ -51,6 +52,9 @@ class App extends StatelessWidget {
           Provider<GetBooksUseCase>.value(
             value: GetBooksUseCase(storage: storage, bookService: bookService),
           ),
+          Provider<AddBookUseCase>.value(
+            value: AddBookUseCase(storage: storage, bookService: bookService),
+          ),
           Provider<StartPageModel>.value(
             value: StartPageModel(
               router: router,
@@ -68,6 +72,7 @@ class App extends StatelessWidget {
             scaffoldBackgroundColor: Colors.grey[850],
             useMaterial3: true,
             primaryColor: Colors.grey,
+            dialogBackgroundColor: Colors.grey[800],
             textTheme: const TextTheme(
               bodyLarge: TextStyle(color: Colors.grey),
               bodyMedium: TextStyle(color: Colors.grey),

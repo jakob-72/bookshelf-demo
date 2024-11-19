@@ -1,17 +1,17 @@
 sealed class AuthResponse {}
 
-class AuthResponseSuccess extends AuthResponse {
+class AuthSuccess extends AuthResponse {
   final String token;
 
-  AuthResponseSuccess(this.token);
+  AuthSuccess(this.token);
 }
 
-class AuthResponseUnauthorized extends AuthResponse {
-  AuthResponseUnauthorized();
+class Unauthorized extends AuthResponse {
+  Unauthorized();
 }
 
-class AuthResponseInternalError extends AuthResponse {
+class AuthError extends AuthResponse {
   final String message;
 
-  AuthResponseInternalError(this.message);
+  AuthError(this.message);
 }
