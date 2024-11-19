@@ -18,9 +18,9 @@ pub async fn start<A: net::ToSocketAddrs>(addr: A) -> io::Result<()> {
             .service(routes::register)
             .service(routes::preflight)
     })
-        .bind(addr)?
-        .run()
-        .await
+    .bind(addr)?
+    .run()
+    .await
 }
 
 #[cfg(test)]
@@ -45,7 +45,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::login),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/login")
             .set_json(AuthRequest {
@@ -67,7 +67,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::login),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/login")
             .set_json(AuthRequest {
@@ -87,7 +87,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::login),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/login")
             .set_json(AuthRequest {
@@ -107,7 +107,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::register),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/register")
             .set_json(AuthRequest {
@@ -127,7 +127,7 @@ mod tests {
                 .app_data(web::Data::new(provider.clone()))
                 .service(routes::register),
         )
-            .await;
+        .await;
         let req = test::TestRequest::post()
             .uri("/register")
             .set_json(AuthRequest {

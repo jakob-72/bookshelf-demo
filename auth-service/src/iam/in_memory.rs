@@ -5,11 +5,12 @@ use crate::models::user::User;
 use async_std::sync::RwLock;
 use lazy_static::lazy_static;
 use log::debug;
+use std::str::FromStr;
 use uuid::Uuid;
 
 lazy_static! {
     static ref USERS: RwLock<Vec<User>> = RwLock::new(vec![User {
-        id: Uuid::new_v4(),
+        id: Uuid::from_str("9a522b48-b4e2-4d55-8e2e-add7381d2360").unwrap(),
         username: "admin".to_string(),
         hashed_password: "$2b$12$YbjndrLEQYCTYJwcZ8gdJ.6qywkAChSnZ2hSZ2pomFKQl3/VFuSy6".to_string(), // admin
     },]);
