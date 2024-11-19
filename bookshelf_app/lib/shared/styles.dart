@@ -12,6 +12,24 @@ const headline2 = TextStyle(
   color: Colors.grey,
 );
 
+const headline3 = TextStyle(
+  fontSize: 18,
+  fontWeight: FontWeight.bold,
+  color: Colors.grey,
+);
+
+final subtitle1 = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  color: Colors.grey[700],
+);
+
+final subtitle2 = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.grey[700],
+);
+
 final buttonText = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w600,
