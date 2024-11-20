@@ -69,4 +69,7 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
   }
 
   void navigateToLoginPage() => router.replace(LoginRoute(unauthorized: true));
+
+  void navigateToBookDetailPage(Book book) =>
+      router.push(BookDetailRoute(book: book));
 }

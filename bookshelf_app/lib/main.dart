@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bookshelf_app/data/auth_service.dart';
 import 'package:bookshelf_app/data/book_service.dart';
 import 'package:bookshelf_app/data/client.dart';
@@ -11,14 +13,27 @@ import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-const authBaseUrl = 'http://localhost:8091';
-const bookshelfBaseUrl = 'http://localhost:8090';
+String get authBaseUrl {
+  const port = '8091';
+  if (Platform.isAndroid) {
+    return 'http://10.0.2.2:$port';
+  }
+  return 'http://localhost:$port';
+}
+
+String get bookServiceBaseUrl {
+  const port = '8090';
+  if (Platform.isAndroid) {
+    return 'http://10.0.2.2:$port';
+  }
+  return 'http://localhost:$port';
+}
 
 void main() {
   final router = AppRouter();
   final storage = LocalStorage();
   final authService = AuthService(Client.get(authBaseUrl));
-  final bookService = BookService(Client.get(bookshelfBaseUrl));
+  final bookService = BookService(Client.get(bookServiceBaseUrl));
 
   runApp(App(
     router: router,

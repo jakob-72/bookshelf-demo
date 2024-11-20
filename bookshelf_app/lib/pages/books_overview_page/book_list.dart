@@ -1,6 +1,8 @@
 import 'package:bookshelf_app/data/models/book.dart';
+import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
 import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BookList extends StatelessWidget {
   final List<Book> books;
@@ -57,7 +59,9 @@ class BookListItem extends StatelessWidget {
                 width: 24,
                 height: 24,
               ),
-        onTap: () => print('Tapped on book ${book.title}'), // TODO dialog
+        onTap: () => context
+            .read<BookOverviewPageModel>()
+            .navigateToBookDetailPage(book),
       );
 
   Row _buildRating() {
@@ -67,13 +71,13 @@ class BookListItem extends StatelessWidget {
       if (i < rating) {
         icons.add(const Icon(
           Icons.star,
-          color: Colors.yellow,
+          color: Colors.yellowAccent,
           size: 16,
         ));
       } else {
         icons.add(const Icon(
           Icons.star_border_outlined,
-          color: Colors.yellow,
+          color: Colors.yellowAccent,
           size: 16,
         ));
       }
