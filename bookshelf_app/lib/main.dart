@@ -8,6 +8,7 @@ import 'package:bookshelf_app/domain/add_book_use_case.dart';
 import 'package:bookshelf_app/domain/check_token_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
 import 'package:bookshelf_app/domain/login_use_case.dart';
+import 'package:bookshelf_app/domain/logout_use_case.dart';
 import 'package:bookshelf_app/pages/start_page/start_page_model.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +16,24 @@ import 'package:provider/provider.dart';
 
 String get authBaseUrl {
   const port = '8091';
-  if (Platform.isAndroid) {
-    return 'http://10.0.2.2:$port';
+  try {
+    if (Platform.isAndroid) {
+      return 'http://10.0.2.2:$port';
+    }
+  } catch (_) {
+    // ignore - safeguard for web
   }
   return 'http://localhost:$port';
 }
 
 String get bookServiceBaseUrl {
   const port = '8090';
-  if (Platform.isAndroid) {
-    return 'http://10.0.2.2:$port';
+  try {
+    if (Platform.isAndroid) {
+      return 'http://10.0.2.2:$port';
+    }
+  } catch (_) {
+    // ignore - safeguard for web
   }
   return 'http://localhost:$port';
 }
@@ -70,6 +79,7 @@ class App extends StatelessWidget {
           Provider<AddBookUseCase>.value(
             value: AddBookUseCase(storage: storage, bookService: bookService),
           ),
+          Provider<LogoutUseCase>.value(value: LogoutUseCase(storage: storage)),
           Provider<StartPageModel>.value(
             value: StartPageModel(
               router: router,
@@ -85,6 +95,12 @@ class App extends StatelessWidget {
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
             scaffoldBackgroundColor: Colors.grey[850],
+            appBarTheme: AppBarTheme(
+              actionsIconTheme: const IconThemeData(color: Colors.grey),
+              iconTheme: const IconThemeData(color: Colors.grey),
+              backgroundColor: Colors.grey[850],
+              titleTextStyle: const TextStyle(color: Colors.grey),
+            ),
             useMaterial3: true,
             primaryColor: Colors.grey,
             dialogBackgroundColor: Colors.grey[800],

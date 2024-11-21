@@ -22,8 +22,21 @@ class BookOverviewPage extends StatelessWidget {
           final state = context.watch<BooksOverviewPageState>();
           return Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.grey[850],
                 title: const Text('My Books', style: headline1),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    tooltip: 'Refresh',
+                    onPressed: () =>
+                        context.read<BookOverviewPageModel>().refresh(),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.logout),
+                    tooltip: 'Logout',
+                    onPressed: () =>
+                        context.read<BookOverviewPageModel>().logout(),
+                  ),
+                ],
               ),
               body: Center(
                 child: Padding(

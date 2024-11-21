@@ -3,6 +3,7 @@ import 'package:bookshelf_app/data/dto/get_books_response.dart';
 import 'package:bookshelf_app/data/models/book.dart';
 import 'package:bookshelf_app/domain/add_book_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
+import 'package:bookshelf_app/domain/logout_use_case.dart';
 import 'package:bookshelf_app/pages/books_overview_page/state.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:bookshelf_app/shared/app_router.gr.dart';
@@ -19,6 +20,8 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
   GetBooksUseCase get getBooksUseCase => read<GetBooksUseCase>();
 
   AddBookUseCase get addBookUseCase => read<AddBookUseCase>();
+
+  LogoutUseCase get logoutUseCase => read<LogoutUseCase>();
 
   List<Book> _books = [];
 
@@ -66,6 +69,11 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
     } else {
       state = Error(_books, (result as AddBookError).message);
     }
+  }
+
+  Future<void> logout() async {
+    await logoutUseCase.logout();
+    router.replace(LoginRoute());
   }
 
   void navigateToLoginPage() => router.replace(LoginRoute(unauthorized: true));
