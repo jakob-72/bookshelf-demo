@@ -106,15 +106,26 @@ class _LoginFormState extends State<LoginForm> {
                     decoration: inputDecoration('Password'),
                   ),
                   const Gap(16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () => _login(model),
-                      child: Text(
-                        'Login',
-                        style: buttonText,
+                  Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => _login(model),
+                          style: primaryButton,
+                          child: const Text('Login'),
+                        ),
                       ),
-                    ),
+                      const Gap(16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () => _register(model),
+                          style: secondaryButton,
+                          child: const Text('Register'),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -128,6 +139,16 @@ class _LoginFormState extends State<LoginForm> {
       return;
     }
     model.login(
+      _usernameController.text,
+      _passwordController.text,
+    );
+  }
+
+  void _register(LoginPageModel model) {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    model.register(
       _usernameController.text,
       _passwordController.text,
     );

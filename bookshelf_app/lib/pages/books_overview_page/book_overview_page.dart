@@ -86,6 +86,7 @@ class BookOverviewBody extends StatelessWidget {
                 const Gap(16),
                 ElevatedButton(
                   onPressed: () => model.refresh(),
+                  style: primaryButton,
                   child: const Text('Retry'),
                 ),
               ],

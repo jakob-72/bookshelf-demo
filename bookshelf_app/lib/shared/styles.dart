@@ -30,10 +30,28 @@ final subtitle2 = TextStyle(
   color: Colors.grey[700],
 );
 
-final buttonText = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.w600,
-  color: Colors.grey[800],
+final primaryButton = ElevatedButton.styleFrom(
+  backgroundColor: Colors.blue,
+  foregroundColor: Colors.white,
+  shadowColor: Colors.black54,
+  elevation: 5,
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  textStyle: const TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  ),
+);
+
+final secondaryButton = ElevatedButton.styleFrom(
+  backgroundColor: Colors.grey[600],
+  foregroundColor: Colors.white,
+  shadowColor: Colors.black45,
+  elevation: 3,
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  textStyle: const TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.normal,
+  ),
 );
 
 InputDecoration inputDecoration(String label, {bool required = false}) =>

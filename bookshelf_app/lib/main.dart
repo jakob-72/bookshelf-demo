@@ -9,6 +9,7 @@ import 'package:bookshelf_app/domain/check_token_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
 import 'package:bookshelf_app/domain/login_use_case.dart';
 import 'package:bookshelf_app/domain/logout_use_case.dart';
+import 'package:bookshelf_app/domain/register_use_case.dart';
 import 'package:bookshelf_app/pages/start_page/start_page_model.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,10 @@ class App extends StatelessWidget {
         providers: [
           ListenableProvider<AppRouter>.value(value: router),
           Provider<LoginUseCase>.value(
-            value: LoginUseCase(authService, storage),
+            value: LoginUseCase(authService: authService, storage: storage),
+          ),
+          Provider<RegisterUseCase>.value(
+            value: RegisterUseCase(authService: authService),
           ),
           Provider<GetBooksUseCase>.value(
             value: GetBooksUseCase(storage: storage, bookService: bookService),

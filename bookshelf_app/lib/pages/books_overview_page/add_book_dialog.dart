@@ -109,10 +109,8 @@ class _AddBookDialogState extends State<AddBookDialog> {
               );
               Navigator.of(context).pop();
             },
-            child: Text(
-              'Submit',
-              style: buttonText,
-            ),
+            style: primaryButton,
+            child: const Text('Submit'),
           ),
         ],
       );

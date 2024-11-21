@@ -34,4 +34,32 @@ class AuthService {
       return AuthError(e.message ?? 'Internal error');
     }
   }
+
+  Future<AuthResponse> register(String username, String password) async {
+    const operation = 'AuthService_register';
+    try {
+      final response = await dio.post(
+        '/register',
+        data: {
+          'username': username,
+          'password': password,
+        },
+        options: Options(validateStatus: (_) => true),
+      );
+      if (response.statusCode == 201) {
+        return RegisterSuccess();
+      } else if (response.statusCode == 409) {
+        return RegisterConflict();
+      } else {
+        Logger.log(
+          'Registration error - ${response.statusCode}: ${response.data}',
+          operation: operation,
+        );
+        return AuthError('${response.statusCode}: ${response.data}');
+      }
+    } on DioException catch (e) {
+      Logger.logError(e, operation: operation);
+      return AuthError(e.message ?? 'Internal error');
+    }
+  }
 }

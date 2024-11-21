@@ -6,9 +6,13 @@ class AuthSuccess extends AuthResponse {
   AuthSuccess(this.token);
 }
 
+class RegisterSuccess extends AuthResponse {}
+
 class Unauthorized extends AuthResponse {
   Unauthorized();
 }
+
+class RegisterConflict extends AuthResponse {}
 
 class AuthError extends AuthResponse {
   final String message;
