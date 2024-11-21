@@ -82,6 +82,7 @@ class _LoginFormState extends State<LoginForm> {
                   TextFormField(
                     controller: _usernameController,
                     keyboardType: TextInputType.name,
+                    onFieldSubmitted: (_) => _login(model),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your username';
@@ -94,6 +95,7 @@ class _LoginFormState extends State<LoginForm> {
                   TextFormField(
                     controller: _passwordController,
                     keyboardType: TextInputType.visiblePassword,
+                    onFieldSubmitted: (_) => _login(model),
                     obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -107,15 +109,7 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (!_formKey.currentState!.validate()) {
-                          return;
-                        }
-                        model.login(
-                          _usernameController.text,
-                          _passwordController.text,
-                        );
-                      },
+                      onPressed: () => _login(model),
                       child: Text(
                         'Login',
                         style: buttonText,
@@ -128,6 +122,16 @@ class _LoginFormState extends State<LoginForm> {
           );
         },
       );
+
+  void _login(LoginPageModel model) {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    model.login(
+      _usernameController.text,
+      _passwordController.text,
+    );
+  }
 
   @override
   dispose() {
