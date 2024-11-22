@@ -5,4 +5,11 @@ import 'package:state_notifier/state_notifier.dart';
 class BookDetailPageModel extends StateNotifier<BookDetailPageState>
     with LocatorMixin {
   BookDetailPageModel(Book book) : super(Idle(book));
+
+  Future<void> saveBook(Book newBook) async {
+    // TODO implement proper saving
+    state = Loading();
+    await Future.delayed(const Duration(seconds: 2));
+    state = Idle(newBook);
+  }
 }

@@ -42,6 +42,18 @@ final primaryButton = ElevatedButton.styleFrom(
   ),
 );
 
+final deleteButton = ElevatedButton.styleFrom(
+  backgroundColor: Colors.red,
+  foregroundColor: Colors.white,
+  shadowColor: Colors.black54,
+  elevation: 5,
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+  textStyle: const TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  ),
+);
+
 final secondaryButton = ElevatedButton.styleFrom(
   backgroundColor: Colors.grey[600],
   foregroundColor: Colors.white,

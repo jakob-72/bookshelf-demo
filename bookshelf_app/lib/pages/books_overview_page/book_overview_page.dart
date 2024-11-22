@@ -41,7 +41,12 @@ class BookOverviewPage extends StatelessWidget {
               body: Center(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: BookOverviewBody(state: state),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxWidth: 800,
+                    ),
+                    child: BookOverviewBody(state: state),
+                  ),
                 ),
               ),
               floatingActionButton: FloatingActionButton(

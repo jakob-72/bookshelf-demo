@@ -42,7 +42,7 @@ class BookDetailRoute extends _i5.PageRouteInfo<BookDetailRouteArgs> {
       final args = data.argsAs<BookDetailRouteArgs>();
       return _i1.BookDetailPage(
         key: args.key,
-        book: args.book,
+        initialBook: args.book,
       );
     },
   );
