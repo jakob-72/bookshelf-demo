@@ -5,6 +5,7 @@ import "bookshelf-service/internal/domain"
 
 // Provider is a struct that contains all the use cases that are required by the application
 type Provider struct {
+	GetBook    domain.GetBookUseCase
 	GetBooks   domain.GetBooksUseCase
 	CreateBook domain.CreateBookUseCase
 	UpdateBook domain.UpdateBookUseCase

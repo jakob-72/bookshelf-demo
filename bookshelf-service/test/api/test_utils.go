@@ -15,6 +15,16 @@ func (m *MockedGetBooksUseCase) GetBooks(userId string, filter map[string]string
 	return m.GetBooksFn(userId, filter)
 }
 
+// ### GetBook
+
+type MockedGetBookUseCase struct {
+	GetBookFn func(userId string, bookId string) (models.Book, error)
+}
+
+func (m *MockedGetBookUseCase) GetBook(userId string, bookId string) (models.Book, error) {
+	return m.GetBookFn(userId, bookId)
+}
+
 // ### CreateBook
 
 type MockedCreateBookUseCase struct {

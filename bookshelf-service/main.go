@@ -23,6 +23,7 @@ func main() {
 
 	repository := database.NewRepository()
 	provider := shared.Provider{
+		GetBook:    domain.NewGetBookUseCase(repository),
 		GetBooks:   domain.NewGetBooksUseCase(repository),
 		CreateBook: domain.NewCreateBookUseCase(repository),
 		UpdateBook: domain.NewUpdateBookUseCase(repository),

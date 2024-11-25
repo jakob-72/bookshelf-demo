@@ -10,7 +10,7 @@ import (
 
 func TestGetBooksSuccessfully(t *testing.T) {
 	repository := &MockedRepository{
-		GetBookFn: func(userID string, filter map[string]string) ([]models.Book, error) {
+		GetBooksFn: func(userID string, filter map[string]string) ([]models.Book, error) {
 			return []models.Book{
 				{
 					ID:     "1",
@@ -34,7 +34,7 @@ func TestGetBooksSuccessfully(t *testing.T) {
 
 func TestGetBooksWithError(t *testing.T) {
 	repository := &MockedRepository{
-		GetBookFn: func(userID string, filter map[string]string) ([]models.Book, error) {
+		GetBooksFn: func(userID string, filter map[string]string) ([]models.Book, error) {
 			return nil, fmt.Errorf("error connecting to the database")
 		},
 	}

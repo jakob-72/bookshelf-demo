@@ -42,6 +42,7 @@ func Initialize(provider shared.Provider, jwtSecret string) *fiber.App {
 	app.Get("/check", CheckToken)
 	app.Get("/books", GetBooks)
 	app.Post("/books", CreateBook)
+	app.Get("/books/:id", GetBook)
 	app.Put("/books/:id", UpdateBook)
 	app.Delete("/books/:id", DeleteBook)
 

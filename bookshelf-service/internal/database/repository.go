@@ -10,7 +10,7 @@ import (
 
 // Repository is an interface that defines the methods to interact with the database
 type Repository interface {
-	GetBook(userID string, filter map[string]string) ([]models.Book, error)
+	GetBooks(userID string, filter map[string]string) ([]models.Book, error)
 	GetBookByID(userID, bookID string) (models.Book, error)
 	GetBookByTitleAndAuthor(userID, title, author string) (models.Book, error)
 	CreateBook(userID, title, author, genre string, read bool, rating int) (models.Book, error)
@@ -23,8 +23,8 @@ type repository struct {
 
 var filterableColumns = []string{"title", "author", "genre", "read", "rating"}
 
-// GetBook retrieves books based on userID and filter criteria
-func (r *repository) GetBook(userID string, filter map[string]string) ([]models.Book, error) {
+// GetBooks retrieves books based on userID and filter criteria
+func (r *repository) GetBooks(userID string, filter map[string]string) ([]models.Book, error) {
 	db, err := GetConnection()
 	if err != nil {
 		return nil, err
@@ -50,6 +50,9 @@ func (r *repository) GetBookByID(userID, bookID string) (models.Book, error) {
 
 	var book models.Book
 	db.Where("user_id = ?", userID).Where("id = ?", bookID).First(&book)
+	if book.ID == "" {
+		return models.Book{}, fmt.Errorf("book not found")
+	}
 	return book, nil
 }
 

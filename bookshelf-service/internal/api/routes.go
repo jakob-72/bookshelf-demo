@@ -40,6 +40,26 @@ func GetBooks(c *fiber.Ctx) error {
 	return c.JSON(books)
 }
 
+// GetBook returns a book for the user - Authenticated user is required
+// Success: 200 - Returns the book
+// Error: 401 - Unauthorized
+// Error: 404 - Not Found - Book not found
+func GetBook(c *fiber.Ctx) error {
+	userId, err := readUserIdFromClaims(c)
+	if err != nil {
+		return c.SendStatus(fiber.StatusUnauthorized)
+	}
+
+	bookId := c.Params("id")
+	useCase := Provider.GetBook
+	book, err := useCase.GetBook(userId, bookId)
+	if err != nil {
+		return c.Status(handleError(err)).SendString(err.Error())
+	}
+
+	return c.JSON(book)
+}
+
 // CreateBook creates a new book for the user - Authenticated user is required
 // Success: 201 - Returns the created book
 // Error: 400 - Bad Request - Malformed request body

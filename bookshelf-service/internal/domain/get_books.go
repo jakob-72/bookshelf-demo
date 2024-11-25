@@ -16,7 +16,7 @@ type getBooksUseCase struct {
 }
 
 func (useCase *getBooksUseCase) GetBooks(userId string, filter map[string]string) ([]models.Book, error) {
-	books, err := useCase.repository.GetBook(userId, filter)
+	books, err := useCase.repository.GetBooks(userId, filter)
 	if err != nil {
 		return nil, &UseCaseError{
 			Code:    InternalError,
