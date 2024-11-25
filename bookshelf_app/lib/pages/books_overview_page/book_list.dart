@@ -61,7 +61,7 @@ class BookListItem extends StatelessWidget {
               ),
         onTap: () => context
             .read<BookOverviewPageModel>()
-            .navigateToBookDetailPage(book),
+            .navigateToBookDetailPage(book.id),
       );
 
   Row _buildRating() {

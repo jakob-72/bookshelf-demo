@@ -1,5 +1,3 @@
-import 'package:bookshelf_app/data/dto/add_book_response.dart';
-import 'package:bookshelf_app/data/dto/get_books_response.dart';
 import 'package:bookshelf_app/data/models/book.dart';
 import 'package:bookshelf_app/domain/add_book_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
@@ -34,14 +32,14 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
   Future<void> refresh() async {
     state = Loading(_books);
     final result = await getBooksUseCase.getBooks();
-    if (result is GetBooksResponseSuccess) {
-      _books = result.books;
-      state = Idle(_books);
-    } else if (result is GetBooksResponseUnauthorized) {
-      navigateToLoginPage();
-    } else {
-      state = Error(_books, (result as GetBooksResponseError).message);
-    }
+    result.when(
+      success: (books) {
+        _books = books;
+        state = Idle(_books);
+      },
+      unauthorized: () => navigateToLoginPage(),
+      error: (error) => state = Error(_books, error),
+    );
   }
 
   Future<void> addBook({
@@ -59,16 +57,15 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
       rating: rating,
       read: read,
     );
-    if (result is AddedSuccessfully) {
-      _books.add(result.book);
-      state = Idle(_books);
-    } else if (result is AddBookUnauthorized) {
-      navigateToLoginPage();
-    } else if (result is Conflict) {
-      state = Error(_books, 'This Book already exists');
-    } else {
-      state = Error(_books, (result as AddBookError).message);
-    }
+    result.when(
+      success: (book) {
+        _books.add(book);
+        state = Idle(_books);
+      },
+      unauthorized: (_) => navigateToLoginPage(),
+      conflict: (_) => state = Error(_books, 'This Book already exists'),
+      error: (error) => state = Error(_books, error),
+    );
   }
 
   Future<void> logout() async {
@@ -78,6 +75,6 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
 
   void navigateToLoginPage() => router.replace(LoginRoute(unauthorized: true));
 
-  void navigateToBookDetailPage(Book book) =>
-      router.push(BookDetailRoute(book: book));
+  void navigateToBookDetailPage(String id) =>
+      router.push(BookDetailRoute(bookId: id));
 }

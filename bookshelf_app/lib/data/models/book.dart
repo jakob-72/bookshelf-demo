@@ -15,6 +15,15 @@ class Book {
     required this.read,
   });
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'author': author,
+        'genre': genre,
+        'rating': rating,
+        'read': read,
+      };
+
   factory Book.fromJson(Map<String, dynamic> json) => Book(
         id: json['id'],
         title: json['title'],

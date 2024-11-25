@@ -9,7 +9,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i5;
-import 'package:bookshelf_app/data/models/book.dart' as _i7;
 import 'package:bookshelf_app/pages/book_detail_page/book_detail_page.dart'
     as _i1;
 import 'package:bookshelf_app/pages/books_overview_page/book_overview_page.dart'
@@ -23,13 +22,13 @@ import 'package:flutter/material.dart' as _i6;
 class BookDetailRoute extends _i5.PageRouteInfo<BookDetailRouteArgs> {
   BookDetailRoute({
     _i6.Key? key,
-    required _i7.Book book,
+    required String bookId,
     List<_i5.PageRouteInfo>? children,
   }) : super(
           BookDetailRoute.name,
           args: BookDetailRouteArgs(
             key: key,
-            book: book,
+            bookId: bookId,
           ),
           initialChildren: children,
         );
@@ -42,7 +41,7 @@ class BookDetailRoute extends _i5.PageRouteInfo<BookDetailRouteArgs> {
       final args = data.argsAs<BookDetailRouteArgs>();
       return _i1.BookDetailPage(
         key: args.key,
-        initialBook: args.book,
+        bookId: args.bookId,
       );
     },
   );
@@ -51,16 +50,16 @@ class BookDetailRoute extends _i5.PageRouteInfo<BookDetailRouteArgs> {
 class BookDetailRouteArgs {
   const BookDetailRouteArgs({
     this.key,
-    required this.book,
+    required this.bookId,
   });
 
   final _i6.Key? key;
 
-  final _i7.Book book;
+  final String bookId;
 
   @override
   String toString() {
-    return 'BookDetailRouteArgs{key: $key, book: $book}';
+    return 'BookDetailRouteArgs{key: $key, bookId: $bookId}';
   }
 }
 

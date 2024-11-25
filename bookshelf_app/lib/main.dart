@@ -6,10 +6,12 @@ import 'package:bookshelf_app/data/client.dart';
 import 'package:bookshelf_app/data/local_storage.dart';
 import 'package:bookshelf_app/domain/add_book_use_case.dart';
 import 'package:bookshelf_app/domain/check_token_use_case.dart';
+import 'package:bookshelf_app/domain/get_book_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
 import 'package:bookshelf_app/domain/login_use_case.dart';
 import 'package:bookshelf_app/domain/logout_use_case.dart';
 import 'package:bookshelf_app/domain/register_use_case.dart';
+import 'package:bookshelf_app/domain/update_book_use_case.dart';
 import 'package:bookshelf_app/pages/start_page/start_page_model.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:flutter/material.dart';
@@ -80,10 +82,17 @@ class App extends StatelessWidget {
           Provider<GetBooksUseCase>.value(
             value: GetBooksUseCase(storage: storage, bookService: bookService),
           ),
+          Provider<GetBookUseCase>.value(
+            value: GetBookUseCase(storage: storage, bookService: bookService),
+          ),
           Provider<AddBookUseCase>.value(
             value: AddBookUseCase(storage: storage, bookService: bookService),
           ),
           Provider<LogoutUseCase>.value(value: LogoutUseCase(storage: storage)),
+          Provider<UpdateBookUseCase>.value(
+            value:
+                UpdateBookUseCase(storage: storage, bookService: bookService),
+          ),
           Provider<StartPageModel>.value(
             value: StartPageModel(
               router: router,

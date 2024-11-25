@@ -3,30 +3,31 @@ import 'package:bookshelf_app/data/models/book.dart';
 import 'package:bookshelf_app/pages/book_detail_page/book_detail_page_model.dart';
 import 'package:bookshelf_app/pages/book_detail_page/state.dart';
 import 'package:bookshelf_app/shared/extensions.dart';
+import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
 class BookDetailPage extends StatelessWidget {
-  final Book initialBook;
+  final String bookId;
 
-  const BookDetailPage({super.key, required this.initialBook});
+  const BookDetailPage({super.key, required this.bookId});
 
   @override
   Widget build(BuildContext context) =>
       StateNotifierProvider<BookDetailPageModel, BookDetailPageState>(
-        create: (context) => BookDetailPageModel(initialBook),
+        create: (context) => BookDetailPageModel(bookId),
         child: Scaffold(
           appBar: AppBar(
-            title: Text(initialBook.title),
+            title: const Text('Book Details', style: headline2),
           ),
           body: Center(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 800),
-                child: BookDetailBody(initialBook: initialBook),
+                child: BookDetailBody(bookId: bookId),
               ),
             ),
           ),
@@ -35,9 +36,9 @@ class BookDetailPage extends StatelessWidget {
 }
 
 class BookDetailBody extends StatefulWidget {
-  final Book initialBook;
+  final String bookId;
 
-  const BookDetailBody({super.key, required this.initialBook});
+  const BookDetailBody({super.key, required this.bookId});
 
   @override
   State<BookDetailBody> createState() => _BookDetailBodyState();
@@ -48,7 +49,7 @@ class _BookDetailBodyState extends State<BookDetailBody> {
 
   @override
   void initState() {
-    book = widget.initialBook;
+    context.read<BookDetailPageModel>().reload();
     super.initState();
   }
 
@@ -132,9 +133,7 @@ class _BookDetailFormState extends State<BookDetailForm> {
               title: const Text('Read'),
               value: _read,
               onChanged: (bool value) {
-                setState(() {
-                  _read = value;
-                });
+                setState(() => _read = value);
               },
             ),
             Row(

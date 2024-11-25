@@ -1,4 +1,18 @@
-sealed class AuthResponse {}
+sealed class AuthResponse {
+  void when({
+    required Function(AuthSuccess) authSuccess,
+    required Function(Unauthorized) unauthorized,
+    required Function(String) authError,
+  }) {
+    if (this is AuthSuccess) {
+      authSuccess(this as AuthSuccess);
+    } else if (this is Unauthorized) {
+      unauthorized(this as Unauthorized);
+    } else if (this is AuthError) {
+      authError((this as AuthError).message);
+    }
+  }
+}
 
 class AuthSuccess extends AuthResponse {
   final String token;
@@ -6,13 +20,9 @@ class AuthSuccess extends AuthResponse {
   AuthSuccess(this.token);
 }
 
-class RegisterSuccess extends AuthResponse {}
-
 class Unauthorized extends AuthResponse {
   Unauthorized();
 }
-
-class RegisterConflict extends AuthResponse {}
 
 class AuthError extends AuthResponse {
   final String message;

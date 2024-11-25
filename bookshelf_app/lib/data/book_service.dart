@@ -1,6 +1,8 @@
 import 'package:bookshelf_app/data/dto/add_book_request.dart';
 import 'package:bookshelf_app/data/dto/add_book_response.dart';
+import 'package:bookshelf_app/data/dto/get_book_response.dart';
 import 'package:bookshelf_app/data/dto/get_books_response.dart';
+import 'package:bookshelf_app/data/dto/update_book_response.dart';
 import 'package:bookshelf_app/data/models/book.dart';
 import 'package:bookshelf_app/shared/logger.dart';
 import 'package:dio/dio.dart';
@@ -66,6 +68,45 @@ class BookService {
     }
   }
 
+  Future<GetBookResponse> getBook(String token, String bookId) async {
+    const operation = 'bookService_getBook';
+    final path = '/books/$bookId';
+    Response? response;
+    try {
+      response = await dio.get(
+        path,
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+          validateStatus: (_) => true,
+        ),
+      );
+      if (response.statusCode == 200) {
+        final book = Book.fromJson(response.data as Map<String, dynamic>);
+        return GetBookSuccess(book);
+      } else if (response.statusCode == 401) {
+        return GetBookUnauthorized();
+      } else if (response.statusCode == 404) {
+        return GetBookNotFound();
+      } else {
+        Logger.log(
+          'Failed to get book: ${response.statusCode} ${response.statusMessage}',
+          operation: operation,
+        );
+        return GetBookError(
+          '${response.statusCode} ${response.statusMessage}',
+        );
+      }
+    } on DioException catch (e) {
+      Logger.logError(e, operation: operation);
+      return GetBookError(e.message ?? 'Internal error');
+    } catch (e) {
+      Logger.logError(e, operation: operation);
+      return GetBookError(
+        'Error parsing response: $e, data: ${response?.data}',
+      );
+    }
+  }
+
   Future<AddBookResponse> addBook(String token, AddBookRequest book) async {
     const operation = 'bookService_addBook';
     const path = '/books';
@@ -101,6 +142,45 @@ class BookService {
     } catch (e) {
       Logger.logError(e, operation: operation);
       return AddBookError(
+        'Error parsing response: $e, data: ${response?.data}',
+      );
+    }
+  }
+
+  Future<UpdateBookResponse> updateBook(String token, Book book) async {
+    const operation = 'bookService_updateBook';
+    final path = '/books/${book.id}';
+    Response? response;
+    try {
+      response = await dio.put(
+        path,
+        data: book.toJson(),
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+          validateStatus: (_) => true,
+        ),
+      );
+      if (response.statusCode == 200) {
+        final updatedBook =
+            Book.fromJson(response.data as Map<String, dynamic>);
+        return Success(updatedBook);
+      } else if (response.statusCode == 401) {
+        return Unauthorized();
+      } else {
+        Logger.log(
+          'Failed to update book: ${response.statusCode} ${response.statusMessage}',
+          operation: operation,
+        );
+        return UpdateError(
+          '${response.statusCode} ${response.statusMessage}',
+        );
+      }
+    } on DioException catch (e) {
+      Logger.logError(e, operation: operation);
+      return UpdateError(e.message ?? 'Internal error');
+    } catch (e) {
+      Logger.logError(e, operation: operation);
+      return UpdateError(
         'Error parsing response: $e, data: ${response?.data}',
       );
     }

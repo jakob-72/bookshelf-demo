@@ -1,4 +1,5 @@
 import 'package:bookshelf_app/data/dto/auth_response.dart';
+import 'package:bookshelf_app/data/dto/register_response.dart';
 import 'package:bookshelf_app/shared/logger.dart';
 import 'package:dio/dio.dart';
 
@@ -35,7 +36,7 @@ class AuthService {
     }
   }
 
-  Future<AuthResponse> register(String username, String password) async {
+  Future<RegisterResponse> register(String username, String password) async {
     const operation = 'AuthService_register';
     try {
       final response = await dio.post(
@@ -55,11 +56,11 @@ class AuthService {
           'Registration error - ${response.statusCode}: ${response.data}',
           operation: operation,
         );
-        return AuthError('${response.statusCode}: ${response.data}');
+        return RegisterError('${response.statusCode}: ${response.data}');
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return AuthError(e.message ?? 'Internal error');
+      return RegisterError(e.message ?? 'Internal error');
     }
   }
 }

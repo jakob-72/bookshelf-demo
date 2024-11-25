@@ -10,8 +10,6 @@ class Idle extends BookDetailPageState {
 
 class Loading extends BookDetailPageState {}
 
-class Unauthorized extends BookDetailPageState {}
-
 class Error extends BookDetailPageState {
   final String message;
 
