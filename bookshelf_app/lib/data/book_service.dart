@@ -46,24 +46,24 @@ class BookService {
         final books = (response.data as List)
             .map((obj) => Book.fromJson(obj as Map<String, dynamic>))
             .toList();
-        return GetBooksResponseSuccess(books);
+        return GetBooksResponse.success(books);
       } else if (response.statusCode == 401) {
-        return GetBooksResponseUnauthorized();
+        return GetBooksResponse.unauthorized();
       } else {
         Logger.log(
           'Failed to get books: ${response.statusCode} ${response.statusMessage}',
           operation: operation,
         );
-        return GetBooksResponseError(
+        return GetBooksResponse.error(
           '${response.statusCode} ${response.statusMessage}',
         );
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return GetBooksResponseError(e.message ?? 'Internal error');
+      return GetBooksResponse.error(e.message ?? 'Internal error');
     } catch (e) {
       Logger.logError(e, operation: operation);
-      return GetBooksResponseError(
+      return GetBooksResponse.error(
         'Error parsing response: $e, data: ${response?.data}',
       );
     }
@@ -83,26 +83,26 @@ class BookService {
       );
       if (response.statusCode == 200) {
         final book = Book.fromJson(response.data as Map<String, dynamic>);
-        return GetBookSuccess(book);
+        return GetBookResponse.success(book);
       } else if (response.statusCode == 401) {
-        return GetBookUnauthorized();
+        return GetBookResponse.unauthorized();
       } else if (response.statusCode == 404) {
-        return GetBookNotFound();
+        return GetBookResponse.notFound();
       } else {
         Logger.log(
           'Failed to get book: ${response.statusCode} ${response.statusMessage}',
           operation: operation,
         );
-        return GetBookError(
+        return GetBookResponse.error(
           '${response.statusCode} ${response.statusMessage}',
         );
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return GetBookError(e.message ?? 'Internal error');
+      return GetBookResponse.error(e.message ?? 'Internal error');
     } catch (e) {
       Logger.logError(e, operation: operation);
-      return GetBookError(
+      return GetBookResponse.error(
         'Error parsing response: $e, data: ${response?.data}',
       );
     }
@@ -123,26 +123,26 @@ class BookService {
       );
       if (response.statusCode == 201) {
         final newBook = Book.fromJson(response.data as Map<String, dynamic>);
-        return AddedSuccessfully(newBook);
+        return AddBookResponse.success(newBook);
       } else if (response.statusCode == 401) {
-        return AddBookUnauthorized();
+        return AddBookResponse.unauthorized();
       } else if (response.statusCode == 409) {
-        return Conflict();
+        return AddBookResponse.conflict();
       } else {
         Logger.log(
           'Failed to add book: ${response.statusCode} ${response.statusMessage}',
           operation: operation,
         );
-        return AddBookError(
+        return AddBookResponse.error(
           '${response.statusCode} ${response.statusMessage}',
         );
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return AddBookError(e.message ?? 'Internal error');
+      return AddBookResponse.error(e.message ?? 'Internal error');
     } catch (e) {
       Logger.logError(e, operation: operation);
-      return AddBookError(
+      return AddBookResponse.error(
         'Error parsing response: $e, data: ${response?.data}',
       );
     }
@@ -164,24 +164,26 @@ class BookService {
       if (response.statusCode == 200) {
         final updatedBook =
             Book.fromJson(response.data as Map<String, dynamic>);
-        return Success(updatedBook);
+        return UpdateBookResponse.success(updatedBook);
       } else if (response.statusCode == 401) {
-        return Unauthorized();
+        return UpdateBookResponse.unauthorized();
+      } else if (response.statusCode == 404) {
+        return UpdateBookResponse.notFound();
       } else {
         Logger.log(
           'Failed to update book: ${response.statusCode} ${response.statusMessage}',
           operation: operation,
         );
-        return UpdateError(
+        return UpdateBookResponse.error(
           '${response.statusCode} ${response.statusMessage}',
         );
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return UpdateError(e.message ?? 'Internal error');
+      return UpdateBookResponse.error(e.message ?? 'Internal error');
     } catch (e) {
       Logger.logError(e, operation: operation);
-      return UpdateError(
+      return UpdateBookResponse.error(
         'Error parsing response: $e, data: ${response?.data}',
       );
     }
@@ -200,24 +202,26 @@ class BookService {
         ),
       );
       if (response.statusCode == 204) {
-        return DeletedSuccessfully();
+        return DeleteBookResponse.success();
       } else if (response.statusCode == 401) {
-        return DeleteUnauthorized();
+        return DeleteBookResponse.unauthorized();
+      } else if (response.statusCode == 404) {
+        return DeleteBookResponse.notFound();
       } else {
         Logger.log(
           'Failed to delete book: ${response.statusCode} ${response.statusMessage}',
           operation: operation,
         );
-        return DeleteBookError(
+        return DeleteBookResponse.error(
           '${response.statusCode} ${response.statusMessage}',
         );
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return DeleteBookError(e.message ?? 'Internal error');
+      return DeleteBookResponse.error(e.message ?? 'Internal error');
     } catch (e) {
       Logger.logError(e, operation: operation);
-      return DeleteBookError(
+      return DeleteBookResponse.error(
         'Unknown error - response: $e, data: ${response?.data}',
       );
     }

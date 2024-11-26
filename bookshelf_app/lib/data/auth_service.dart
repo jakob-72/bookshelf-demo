@@ -20,19 +20,19 @@ class AuthService {
         options: Options(validateStatus: (_) => true),
       );
       if (response.statusCode == 200) {
-        return AuthSuccess(response.data['token']);
+        return AuthResponse.success(response.data['token']);
       } else if (response.statusCode == 401) {
-        return Unauthorized();
+        return AuthResponse.unauthorized();
       } else {
         Logger.log(
           'Authentication error - ${response.statusCode}: ${response.data}',
           operation: operation,
         );
-        return AuthError('${response.statusCode}: ${response.data}');
+        return AuthResponse.error('${response.statusCode}: ${response.data}');
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return AuthError(e.message ?? 'Internal error');
+      return AuthResponse.error(e.message ?? 'Internal error');
     }
   }
 
@@ -48,19 +48,20 @@ class AuthService {
         options: Options(validateStatus: (_) => true),
       );
       if (response.statusCode == 201) {
-        return RegisterSuccess();
+        return RegisterResponse.success();
       } else if (response.statusCode == 409) {
-        return RegisterConflict();
+        return RegisterResponse.conflict();
       } else {
         Logger.log(
           'Registration error - ${response.statusCode}: ${response.data}',
           operation: operation,
         );
-        return RegisterError('${response.statusCode}: ${response.data}');
+        return RegisterResponse.error(
+            '${response.statusCode}: ${response.data}');
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
-      return RegisterError(e.message ?? 'Internal error');
+      return RegisterResponse.error(e.message ?? 'Internal error');
     }
   }
 }

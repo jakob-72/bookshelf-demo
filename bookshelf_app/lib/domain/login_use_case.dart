@@ -10,9 +10,11 @@ class LoginUseCase {
 
   Future<AuthResponse> login(String username, String password) async {
     final result = await authService.login(username, password);
-    if (result is AuthSuccess) {
-      storage.setToken(result.token);
-    }
+    result.when(
+      success: (token) async => await storage.setToken(token),
+      unauthorized: () {},
+      error: (_) {},
+    );
     return result;
   }
 }

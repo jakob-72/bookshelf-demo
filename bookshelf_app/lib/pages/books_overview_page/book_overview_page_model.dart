@@ -62,8 +62,8 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
         _books.add(book);
         state = Idle(_books);
       },
-      unauthorized: (_) => navigateToLoginPage(),
-      conflict: (_) => state = Error(_books, 'This Book already exists'),
+      unauthorized: () => navigateToLoginPage(),
+      conflict: () => state = Error(_books, 'This Book already exists'),
       error: (error) => state = Error(_books, error),
     );
   }

@@ -18,7 +18,7 @@ class AddBookUseCase {
   }) async {
     final token = await storage.token;
     if (token == null) {
-      return AddBookUnauthorized();
+      return AddBookResponse.unauthorized();
     }
     final book = AddBookRequest(
       title: title,

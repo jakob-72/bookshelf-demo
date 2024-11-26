@@ -1,25 +1,33 @@
 sealed class RegisterResponse {
+  const RegisterResponse();
+
   void when({
-    required Function(RegisterSuccess) registerSuccess,
-    required Function(RegisterConflict) registerConflict,
-    required Function(RegisterError) registerError,
+    required Function() registerSuccess,
+    required Function() registerConflict,
+    required Function(String message) registerError,
   }) {
-    if (this is RegisterSuccess) {
-      registerSuccess(this as RegisterSuccess);
-    } else if (this is RegisterConflict) {
-      registerConflict(this as RegisterConflict);
-    } else if (this is RegisterError) {
-      registerError(this as RegisterError);
+    if (this is _Success) {
+      registerSuccess();
+    } else if (this is _Conflict) {
+      registerConflict();
+    } else if (this is _Error) {
+      registerError((this as _Error).message);
     }
   }
+
+  factory RegisterResponse.success() = _Success;
+
+  factory RegisterResponse.conflict() = _Conflict;
+
+  factory RegisterResponse.error(String message) = _Error;
 }
 
-class RegisterSuccess extends RegisterResponse {}
+class _Success extends RegisterResponse {}
 
-class RegisterConflict extends RegisterResponse {}
+class _Conflict extends RegisterResponse {}
 
-class RegisterError extends RegisterResponse {
+class _Error extends RegisterResponse {
   final String message;
 
-  RegisterError(this.message);
+  _Error(this.message);
 }

@@ -11,7 +11,7 @@ class GetBooksUseCase {
   Future<GetBooksResponse> getBooks() async {
     final token = await storage.token;
     if (token == null) {
-      return GetBooksResponseUnauthorized();
+      return GetBooksResponse.unauthorized();
     }
     return bookService.getBooks(token);
   }

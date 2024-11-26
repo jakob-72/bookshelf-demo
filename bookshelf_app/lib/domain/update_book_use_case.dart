@@ -12,7 +12,7 @@ class UpdateBookUseCase {
   Future<UpdateBookResponse> updateBook(Book book) async {
     final token = await storage.token;
     if (token == null) {
-      return Unauthorized();
+      return UpdateBookResponse.unauthorized();
     }
     return bookService.updateBook(token, book);
   }

@@ -28,9 +28,9 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
     final result = await getBookUseCase.getBook(bookId);
     result.when(
       success: (book) => state = Idle(book),
-      notFound: (_) => state = Error('Book not found'),
+      notFound: () => state = Error('Book not found'),
       error: (message) => state = Error(message),
-      unauthorized: (_) => router.pushAndPopUntil(
+      unauthorized: () => router.pushAndPopUntil(
         LoginRoute(unauthorized: true),
         predicate: (_) => true,
       ),
@@ -47,6 +47,7 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
         LoginRoute(unauthorized: true),
         predicate: (_) => true,
       ),
+      notFound: () => state = Error('Book not found'),
     );
   }
 
@@ -54,12 +55,16 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
     state = Loading();
     final result = await deleteBookUseCase.deleteBook(bookId);
     result.when(
-      deletedSuccessfully: () => router.pushAndPopUntil(
+      success: () => router.pushAndPopUntil(
         const BookOverviewRoute(),
         predicate: (_) => true,
       ),
-      deleteBookNotFound: () => state = Error('Book not found'),
-      deleteBookError: (message) => state = Error(message),
+      notFound: () => state = Error('Book not found'),
+      error: (message) => state = Error(message),
+      unauthorized: () => router.pushAndPopUntil(
+        LoginRoute(unauthorized: true),
+        predicate: (_) => true,
+      ),
     );
   }
 }

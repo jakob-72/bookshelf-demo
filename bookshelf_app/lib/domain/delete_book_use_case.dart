@@ -11,7 +11,7 @@ class DeleteBookUseCase {
   Future<DeleteBookResponse> deleteBook(String bookId) async {
     final token = await storage.token;
     if (token == null) {
-      return DeleteUnauthorized();
+      return DeleteBookResponse.unauthorized();
     }
     return bookService.deleteBook(token, bookId);
   }

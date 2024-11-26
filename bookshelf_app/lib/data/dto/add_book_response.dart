@@ -1,36 +1,46 @@
 import 'package:bookshelf_app/data/models/book.dart';
 
 sealed class AddBookResponse {
+  const AddBookResponse();
+
   void when({
     required Function(Book) success,
-    required Function(AddBookUnauthorized) unauthorized,
-    required Function(Conflict) conflict,
+    required Function() unauthorized,
+    required Function() conflict,
     required Function(String) error,
   }) {
-    if (this is AddedSuccessfully) {
-      success((this as AddedSuccessfully).book);
-    } else if (this is AddBookUnauthorized) {
-      unauthorized(this as AddBookUnauthorized);
-    } else if (this is Conflict) {
-      conflict(this as Conflict);
-    } else if (this is AddBookError) {
-      error((this as AddBookError).message);
+    if (this is _Success) {
+      success((this as _Success).book);
+    } else if (this is _Unauthorized) {
+      unauthorized();
+    } else if (this is _Conflict) {
+      conflict();
+    } else if (this is _Error) {
+      error((this as _Error).message);
     }
   }
+
+  factory AddBookResponse.success(Book book) = _Success;
+
+  factory AddBookResponse.unauthorized() = _Unauthorized;
+
+  factory AddBookResponse.conflict() = _Conflict;
+
+  factory AddBookResponse.error(String message) = _Error;
 }
 
-class AddedSuccessfully extends AddBookResponse {
+class _Success extends AddBookResponse {
   final Book book;
 
-  AddedSuccessfully(this.book);
+  _Success(this.book);
 }
 
-class AddBookUnauthorized extends AddBookResponse {}
+class _Unauthorized extends AddBookResponse {}
 
-class Conflict extends AddBookResponse {}
+class _Conflict extends AddBookResponse {}
 
-class AddBookError extends AddBookResponse {
+class _Error extends AddBookResponse {
   final String message;
 
-  AddBookError(this.message);
+  _Error(this.message);
 }

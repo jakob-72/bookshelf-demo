@@ -20,9 +20,9 @@ class LoginPageModel extends StateNotifier<LoginPageState> with LocatorMixin {
     state = Loading();
     final result = await useCase.login(username, password);
     result.when(
-      authSuccess: (_) => state = Success(),
-      unauthorized: (_) => state = Error('Username or password is incorrect'),
-      authError: (error) => state = Error(error),
+      success: (_) => state = Success(),
+      unauthorized: () => state = Error('Username or password is incorrect'),
+      error: (error) => state = Error(error),
     );
   }
 
@@ -30,9 +30,9 @@ class LoginPageModel extends StateNotifier<LoginPageState> with LocatorMixin {
     state = Loading();
     final result = await registerUseCase.register(username, password);
     result.when(
-      registerSuccess: (_) => state = Success(),
-      registerConflict: (_) => state = Error('Username already exists'),
-      registerError: (error) => state = Error(error.message),
+      registerSuccess: () => state = Success(),
+      registerConflict: () => state = Error('Username already exists'),
+      registerError: (error) => state = Error(error),
     );
   }
 

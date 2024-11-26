@@ -1,27 +1,40 @@
 sealed class DeleteBookResponse {
+  const DeleteBookResponse();
+
   void when({
-    required void Function() deletedSuccessfully,
-    required void Function() deleteBookNotFound,
-    required void Function(String message) deleteBookError,
+    required void Function() success,
+    required void Function() unauthorized,
+    required void Function() notFound,
+    required void Function(String message) error,
   }) {
-    if (this is DeletedSuccessfully) {
-      deletedSuccessfully();
-    } else if (this is DeleteBookNotFound) {
-      deleteBookNotFound();
-    } else if (this is DeleteBookError) {
-      deleteBookError((this as DeleteBookError).message);
+    if (this is _Success) {
+      success();
+    } else if (this is _Unauthorized) {
+      unauthorized();
+    } else if (this is _NotFound) {
+      notFound();
+    } else if (this is _Error) {
+      error((this as _Error).message);
     }
   }
+
+  factory DeleteBookResponse.success() = _Success;
+
+  factory DeleteBookResponse.unauthorized() = _Unauthorized;
+
+  factory DeleteBookResponse.notFound() = _NotFound;
+
+  factory DeleteBookResponse.error(String message) = _Error;
 }
 
-class DeletedSuccessfully extends DeleteBookResponse {}
+class _Success extends DeleteBookResponse {}
 
-class DeleteUnauthorized extends DeleteBookResponse {}
+class _Unauthorized extends DeleteBookResponse {}
 
-class DeleteBookNotFound extends DeleteBookResponse {}
+class _NotFound extends DeleteBookResponse {}
 
-class DeleteBookError extends DeleteBookResponse {
+class _Error extends DeleteBookResponse {
   final String message;
 
-  DeleteBookError(this.message);
+  _Error(this.message);
 }
