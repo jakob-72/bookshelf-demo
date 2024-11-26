@@ -41,7 +41,13 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
     state = Loading();
     final result = await updateBookUseCase.updateBook(newBook);
     result.when(
-      success: (book) => state = Idle(book),
+      success: (book) {
+        state = Idle(book);
+        router.pushAndPopUntil(
+          const BookOverviewRoute(),
+          predicate: (_) => true,
+        );
+      },
       error: (message) => state = Error(message),
       unauthorized: () => router.pushAndPopUntil(
         LoginRoute(unauthorized: true),

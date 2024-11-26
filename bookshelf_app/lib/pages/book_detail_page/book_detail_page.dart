@@ -142,9 +142,7 @@ class _BookDetailFormState extends State<BookDetailForm> {
             SwitchListTile(
               title: const Text('Read'),
               value: _read,
-              onChanged: (bool value) {
-                setState(() => _read = value);
-              },
+              onChanged: (bool value) => setState(() => _read = value),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
