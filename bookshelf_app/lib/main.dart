@@ -6,6 +6,7 @@ import 'package:bookshelf_app/data/client.dart';
 import 'package:bookshelf_app/data/local_storage.dart';
 import 'package:bookshelf_app/domain/add_book_use_case.dart';
 import 'package:bookshelf_app/domain/check_token_use_case.dart';
+import 'package:bookshelf_app/domain/delete_book_use_case.dart';
 import 'package:bookshelf_app/domain/get_book_use_case.dart';
 import 'package:bookshelf_app/domain/get_books_use_case.dart';
 import 'package:bookshelf_app/domain/login_use_case.dart';
@@ -87,6 +88,10 @@ class App extends StatelessWidget {
           ),
           Provider<AddBookUseCase>.value(
             value: AddBookUseCase(storage: storage, bookService: bookService),
+          ),
+          Provider<DeleteBookUseCase>.value(
+            value:
+                DeleteBookUseCase(storage: storage, bookService: bookService),
           ),
           Provider<LogoutUseCase>.value(value: LogoutUseCase(storage: storage)),
           Provider<UpdateBookUseCase>.value(

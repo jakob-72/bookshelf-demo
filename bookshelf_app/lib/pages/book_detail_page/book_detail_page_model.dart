@@ -1,7 +1,10 @@
 import 'package:bookshelf_app/data/models/book.dart';
+import 'package:bookshelf_app/domain/delete_book_use_case.dart';
 import 'package:bookshelf_app/domain/get_book_use_case.dart';
 import 'package:bookshelf_app/domain/update_book_use_case.dart';
 import 'package:bookshelf_app/pages/book_detail_page/state.dart';
+import 'package:bookshelf_app/shared/app_router.dart';
+import 'package:bookshelf_app/shared/app_router.gr.dart';
 import 'package:state_notifier/state_notifier.dart';
 
 final initialState = Loading();
@@ -12,9 +15,13 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
 
   final String bookId;
 
+  AppRouter get router => read<AppRouter>();
+
   GetBookUseCase get getBookUseCase => read<GetBookUseCase>();
 
   UpdateBookUseCase get updateBookUseCase => read<UpdateBookUseCase>();
+
+  DeleteBookUseCase get deleteBookUseCase => read<DeleteBookUseCase>();
 
   Future<void> reload() async {
     state = Loading();
@@ -23,9 +30,10 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
       success: (book) => state = Idle(book),
       notFound: (_) => state = Error('Book not found'),
       error: (message) => state = Error(message),
-      unauthorized: (_) {
-        // TODO navigate to login page
-      },
+      unauthorized: (_) => router.pushAndPopUntil(
+        LoginRoute(unauthorized: true),
+        predicate: (_) => true,
+      ),
     );
   }
 
@@ -35,9 +43,23 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
     result.when(
       success: (book) => state = Idle(book),
       error: (message) => state = Error(message),
-      unauthorized: () {
-        // TODO navigate to login page
-      },
+      unauthorized: () => router.pushAndPopUntil(
+        LoginRoute(unauthorized: true),
+        predicate: (_) => true,
+      ),
+    );
+  }
+
+  Future<void> deleteBook() async {
+    state = Loading();
+    final result = await deleteBookUseCase.deleteBook(bookId);
+    result.when(
+      deletedSuccessfully: () => router.pushAndPopUntil(
+        const BookOverviewRoute(),
+        predicate: (_) => true,
+      ),
+      deleteBookNotFound: () => state = Error('Book not found'),
+      deleteBookError: (message) => state = Error(message),
     );
   }
 }

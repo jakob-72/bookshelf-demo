@@ -1,5 +1,6 @@
 import 'package:bookshelf_app/data/dto/add_book_request.dart';
 import 'package:bookshelf_app/data/dto/add_book_response.dart';
+import 'package:bookshelf_app/data/dto/delete_book_response.dart';
 import 'package:bookshelf_app/data/dto/get_book_response.dart';
 import 'package:bookshelf_app/data/dto/get_books_response.dart';
 import 'package:bookshelf_app/data/dto/update_book_response.dart';
@@ -182,6 +183,42 @@ class BookService {
       Logger.logError(e, operation: operation);
       return UpdateError(
         'Error parsing response: $e, data: ${response?.data}',
+      );
+    }
+  }
+
+  Future<DeleteBookResponse> deleteBook(String token, String bookId) async {
+    const operation = 'bookService_deleteBook';
+    final path = '/books/$bookId';
+    Response? response;
+    try {
+      response = await dio.delete(
+        path,
+        options: Options(
+          headers: {'Authorization': 'Bearer $token'},
+          validateStatus: (_) => true,
+        ),
+      );
+      if (response.statusCode == 204) {
+        return DeletedSuccessfully();
+      } else if (response.statusCode == 401) {
+        return DeleteUnauthorized();
+      } else {
+        Logger.log(
+          'Failed to delete book: ${response.statusCode} ${response.statusMessage}',
+          operation: operation,
+        );
+        return DeleteBookError(
+          '${response.statusCode} ${response.statusMessage}',
+        );
+      }
+    } on DioException catch (e) {
+      Logger.logError(e, operation: operation);
+      return DeleteBookError(e.message ?? 'Internal error');
+    } catch (e) {
+      Logger.logError(e, operation: operation);
+      return DeleteBookError(
+        'Unknown error - response: $e, data: ${response?.data}',
       );
     }
   }

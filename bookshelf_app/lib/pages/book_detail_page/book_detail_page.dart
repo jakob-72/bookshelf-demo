@@ -1,7 +1,10 @@
 import 'package:auto_route/annotations.dart';
 import 'package:bookshelf_app/data/models/book.dart';
 import 'package:bookshelf_app/pages/book_detail_page/book_detail_page_model.dart';
+import 'package:bookshelf_app/pages/book_detail_page/delete_book_dialog.dart';
 import 'package:bookshelf_app/pages/book_detail_page/state.dart';
+import 'package:bookshelf_app/shared/app_router.dart';
+import 'package:bookshelf_app/shared/app_router.gr.dart';
 import 'package:bookshelf_app/shared/extensions.dart';
 import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +24,13 @@ class BookDetailPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: const Text('Book Details', style: headline2),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.read<AppRouter>().pushAndPopUntil(
+                    const BookOverviewRoute(),
+                    predicate: (_) => true,
+                  ),
+            ),
           ),
           body: Center(
             child: Padding(
@@ -154,12 +164,17 @@ class _BookDetailFormState extends State<BookDetailForm> {
                     );
                     model.saveBook(newBook);
                   },
+                  style: primaryButton,
                   child: const Text('Save Changes'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // Delete book
-                  },
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => DeleteBookDialog(
+                      onConfirm: () => model.deleteBook(),
+                    ),
+                  ),
+                  style: deleteButton,
                   child: const Text('Delete Book'),
                 ),
               ],
