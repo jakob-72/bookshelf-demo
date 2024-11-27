@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 sealed class RegisterResponse {
   const RegisterResponse();
 
@@ -6,28 +8,31 @@ sealed class RegisterResponse {
     required Function() registerConflict,
     required Function(String message) registerError,
   }) {
-    if (this is _Success) {
+    if (this is Success) {
       registerSuccess();
-    } else if (this is _Conflict) {
+    } else if (this is Conflict) {
       registerConflict();
-    } else if (this is _Error) {
-      registerError((this as _Error).message);
+    } else if (this is Error) {
+      registerError((this as Error).message);
     }
   }
 
-  factory RegisterResponse.success() = _Success;
+  factory RegisterResponse.success() = Success;
 
-  factory RegisterResponse.conflict() = _Conflict;
+  factory RegisterResponse.conflict() = Conflict;
 
-  factory RegisterResponse.error(String message) = _Error;
+  factory RegisterResponse.error(String message) = Error;
 }
 
-class _Success extends RegisterResponse {}
+@visibleForTesting
+class Success extends RegisterResponse {}
 
-class _Conflict extends RegisterResponse {}
+@visibleForTesting
+class Conflict extends RegisterResponse {}
 
-class _Error extends RegisterResponse {
+@visibleForTesting
+class Error extends RegisterResponse {
   final String message;
 
-  _Error(this.message);
+  Error(this.message);
 }

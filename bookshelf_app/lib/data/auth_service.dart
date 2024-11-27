@@ -10,8 +10,9 @@ class AuthService {
 
   Future<AuthResponse> login(String username, String password) async {
     const operation = 'AuthService_login';
+    Response? response;
     try {
-      final response = await dio.post(
+      response = await dio.post(
         '/login',
         data: {
           'username': username,
@@ -33,6 +34,10 @@ class AuthService {
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);
       return AuthResponse.error(e.message ?? 'Internal error');
+    } catch (e) {
+      Logger.logError(e, operation: operation);
+      return AuthResponse.error(
+          'Error parsing response: $e, data: ${response?.data}');
     }
   }
 

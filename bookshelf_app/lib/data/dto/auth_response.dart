@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 sealed class AuthResponse {
   const AuthResponse();
 
@@ -6,32 +8,35 @@ sealed class AuthResponse {
     required Function() unauthorized,
     required Function(String) error,
   }) {
-    if (this is _Success) {
-      success((this as _Success).token);
-    } else if (this is _Unauthorized) {
+    if (this is Success) {
+      success((this as Success).token);
+    } else if (this is Unauthorized) {
       unauthorized();
-    } else if (this is _Error) {
-      error((this as _Error).message);
+    } else if (this is Error) {
+      error((this as Error).message);
     }
   }
 
-  factory AuthResponse.success(String token) = _Success;
+  factory AuthResponse.success(String token) = Success;
 
-  factory AuthResponse.unauthorized() = _Unauthorized;
+  factory AuthResponse.unauthorized() = Unauthorized;
 
-  factory AuthResponse.error(String message) = _Error;
+  factory AuthResponse.error(String message) = Error;
 }
 
-class _Success extends AuthResponse {
+@visibleForTesting
+class Success extends AuthResponse {
   final String token;
 
-  _Success(this.token);
+  Success(this.token);
 }
 
-class _Unauthorized extends AuthResponse {}
+@visibleForTesting
+class Unauthorized extends AuthResponse {}
 
-class _Error extends AuthResponse {
+@visibleForTesting
+class Error extends AuthResponse {
   final String message;
 
-  _Error(this.message);
+  Error(this.message);
 }
