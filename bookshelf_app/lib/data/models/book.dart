@@ -10,9 +10,9 @@ class Book {
     required this.id,
     required this.title,
     required this.author,
-    required this.genre,
-    required this.rating,
-    required this.read,
+    this.genre,
+    this.rating,
+    this.read = false,
   });
 
   Map<String, dynamic> toJson() => {
@@ -30,6 +30,6 @@ class Book {
         author: json['author'],
         genre: json['genre'],
         rating: json['rating'],
-        read: json['read'],
+        read: json['read'] ?? false,
       );
 }

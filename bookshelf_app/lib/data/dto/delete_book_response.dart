@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 sealed class DeleteBookResponse {
   const DeleteBookResponse();
 
@@ -7,34 +9,38 @@ sealed class DeleteBookResponse {
     required void Function() notFound,
     required void Function(String message) error,
   }) {
-    if (this is _Success) {
+    if (this is Success) {
       success();
-    } else if (this is _Unauthorized) {
+    } else if (this is Unauthorized) {
       unauthorized();
-    } else if (this is _NotFound) {
+    } else if (this is NotFound) {
       notFound();
-    } else if (this is _Error) {
-      error((this as _Error).message);
+    } else if (this is Error) {
+      error((this as Error).message);
     }
   }
 
-  factory DeleteBookResponse.success() = _Success;
+  factory DeleteBookResponse.success() = Success;
 
-  factory DeleteBookResponse.unauthorized() = _Unauthorized;
+  factory DeleteBookResponse.unauthorized() = Unauthorized;
 
-  factory DeleteBookResponse.notFound() = _NotFound;
+  factory DeleteBookResponse.notFound() = NotFound;
 
-  factory DeleteBookResponse.error(String message) = _Error;
+  factory DeleteBookResponse.error(String message) = Error;
 }
 
-class _Success extends DeleteBookResponse {}
+@visibleForTesting
+class Success extends DeleteBookResponse {}
 
-class _Unauthorized extends DeleteBookResponse {}
+@visibleForTesting
+class Unauthorized extends DeleteBookResponse {}
 
-class _NotFound extends DeleteBookResponse {}
+@visibleForTesting
+class NotFound extends DeleteBookResponse {}
 
-class _Error extends DeleteBookResponse {
+@visibleForTesting
+class Error extends DeleteBookResponse {
   final String message;
 
-  _Error(this.message);
+  Error(this.message);
 }

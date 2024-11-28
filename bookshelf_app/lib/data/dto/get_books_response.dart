@@ -1,4 +1,5 @@
 import 'package:bookshelf_app/data/models/book.dart';
+import 'package:flutter/material.dart';
 
 sealed class GetBooksResponse {
   const GetBooksResponse();
@@ -8,32 +9,35 @@ sealed class GetBooksResponse {
     required Function() unauthorized,
     required Function(String message) error,
   }) {
-    if (this is _Success) {
-      success((this as _Success).books);
-    } else if (this is _Unauthorized) {
+    if (this is Success) {
+      success((this as Success).books);
+    } else if (this is Unauthorized) {
       unauthorized();
-    } else if (this is _Error) {
-      error((this as _Error).message);
+    } else if (this is Error) {
+      error((this as Error).message);
     }
   }
 
-  factory GetBooksResponse.success(List<Book> books) = _Success;
+  factory GetBooksResponse.success(List<Book> books) = Success;
 
-  factory GetBooksResponse.unauthorized() = _Unauthorized;
+  factory GetBooksResponse.unauthorized() = Unauthorized;
 
-  factory GetBooksResponse.error(String message) = _Error;
+  factory GetBooksResponse.error(String message) = Error;
 }
 
-class _Success extends GetBooksResponse {
+@visibleForTesting
+class Success extends GetBooksResponse {
   final List<Book> books;
 
-  _Success(this.books);
+  Success(this.books);
 }
 
-class _Unauthorized extends GetBooksResponse {}
+@visibleForTesting
+class Unauthorized extends GetBooksResponse {}
 
-class _Error extends GetBooksResponse {
+@visibleForTesting
+class Error extends GetBooksResponse {
   final String message;
 
-  _Error(this.message);
+  Error(this.message);
 }

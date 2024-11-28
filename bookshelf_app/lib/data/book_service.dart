@@ -55,7 +55,7 @@ class BookService {
           operation: operation,
         );
         return GetBooksResponse.error(
-          '${response.statusCode} ${response.statusMessage}',
+          '${response.statusCode}: ${response.data}',
         );
       }
     } on DioException catch (e) {
@@ -94,7 +94,7 @@ class BookService {
           operation: operation,
         );
         return GetBookResponse.error(
-          '${response.statusCode} ${response.statusMessage}',
+          '${response.statusCode}: ${response.data}',
         );
       }
     } on DioException catch (e) {
@@ -130,11 +130,11 @@ class BookService {
         return AddBookResponse.conflict();
       } else {
         Logger.log(
-          'Failed to add book: ${response.statusCode} ${response.statusMessage}',
+          'Failed to add book: ${response.statusCode}: ${response.statusMessage}',
           operation: operation,
         );
         return AddBookResponse.error(
-          '${response.statusCode} ${response.statusMessage}',
+          '${response.statusCode}: ${response.data}',
         );
       }
     } on DioException catch (e) {
@@ -175,7 +175,7 @@ class BookService {
           operation: operation,
         );
         return UpdateBookResponse.error(
-          '${response.statusCode} ${response.statusMessage}',
+          '${response.statusCode}: ${response.data}',
         );
       }
     } on DioException catch (e) {
@@ -213,7 +213,7 @@ class BookService {
           operation: operation,
         );
         return DeleteBookResponse.error(
-          '${response.statusCode} ${response.statusMessage}',
+          '${response.statusCode}: ${response.data}',
         );
       }
     } on DioException catch (e) {

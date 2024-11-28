@@ -1,4 +1,5 @@
 import 'package:bookshelf_app/data/models/book.dart';
+import 'package:flutter/material.dart';
 
 sealed class AddBookResponse {
   const AddBookResponse();
@@ -9,38 +10,42 @@ sealed class AddBookResponse {
     required Function() conflict,
     required Function(String) error,
   }) {
-    if (this is _Success) {
-      success((this as _Success).book);
-    } else if (this is _Unauthorized) {
+    if (this is Success) {
+      success((this as Success).book);
+    } else if (this is Unauthorized) {
       unauthorized();
-    } else if (this is _Conflict) {
+    } else if (this is Conflict) {
       conflict();
-    } else if (this is _Error) {
-      error((this as _Error).message);
+    } else if (this is Error) {
+      error((this as Error).message);
     }
   }
 
-  factory AddBookResponse.success(Book book) = _Success;
+  factory AddBookResponse.success(Book book) = Success;
 
-  factory AddBookResponse.unauthorized() = _Unauthorized;
+  factory AddBookResponse.unauthorized() = Unauthorized;
 
-  factory AddBookResponse.conflict() = _Conflict;
+  factory AddBookResponse.conflict() = Conflict;
 
-  factory AddBookResponse.error(String message) = _Error;
+  factory AddBookResponse.error(String message) = Error;
 }
 
-class _Success extends AddBookResponse {
+@visibleForTesting
+class Success extends AddBookResponse {
   final Book book;
 
-  _Success(this.book);
+  Success(this.book);
 }
 
-class _Unauthorized extends AddBookResponse {}
+@visibleForTesting
+class Unauthorized extends AddBookResponse {}
 
-class _Conflict extends AddBookResponse {}
+@visibleForTesting
+class Conflict extends AddBookResponse {}
 
-class _Error extends AddBookResponse {
+@visibleForTesting
+class Error extends AddBookResponse {
   final String message;
 
-  _Error(this.message);
+  Error(this.message);
 }

@@ -1,4 +1,5 @@
 import 'package:bookshelf_app/data/models/book.dart';
+import 'package:flutter/material.dart';
 
 sealed class GetBookResponse {
   const GetBookResponse();
@@ -9,38 +10,42 @@ sealed class GetBookResponse {
     required Function() notFound,
     required Function(String) error,
   }) {
-    if (this is _Success) {
-      success((this as _Success).book);
-    } else if (this is _Unauthorized) {
+    if (this is Success) {
+      success((this as Success).book);
+    } else if (this is Unauthorized) {
       unauthorized();
-    } else if (this is _NotFound) {
+    } else if (this is NotFound) {
       notFound();
-    } else if (this is _Error) {
-      error((this as _Error).message);
+    } else if (this is Error) {
+      error((this as Error).message);
     }
   }
 
-  factory GetBookResponse.success(Book book) = _Success;
+  factory GetBookResponse.success(Book book) = Success;
 
-  factory GetBookResponse.unauthorized() = _Unauthorized;
+  factory GetBookResponse.unauthorized() = Unauthorized;
 
-  factory GetBookResponse.notFound() = _NotFound;
+  factory GetBookResponse.notFound() = NotFound;
 
-  factory GetBookResponse.error(String message) = _Error;
+  factory GetBookResponse.error(String message) = Error;
 }
 
-class _Success extends GetBookResponse {
+@visibleForTesting
+class Success extends GetBookResponse {
   final Book book;
 
-  _Success(this.book);
+  Success(this.book);
 }
 
-class _Unauthorized extends GetBookResponse {}
+@visibleForTesting
+class Unauthorized extends GetBookResponse {}
 
-class _NotFound extends GetBookResponse {}
+@visibleForTesting
+class NotFound extends GetBookResponse {}
 
-class _Error extends GetBookResponse {
+@visibleForTesting
+class Error extends GetBookResponse {
   final String message;
 
-  _Error(this.message);
+  Error(this.message);
 }
