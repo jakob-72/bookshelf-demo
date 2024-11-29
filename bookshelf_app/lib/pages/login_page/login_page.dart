@@ -10,6 +10,11 @@ import 'package:provider/provider.dart';
 
 @RoutePage()
 class LoginPage extends StatelessWidget {
+  static const usernameKey = Key('username');
+  static const passwordKey = Key('password');
+  static const loginKey = Key('login');
+  static const registerKey = Key('register');
+
   final bool unauthorized;
 
   const LoginPage({super.key, this.unauthorized = false});
@@ -80,6 +85,7 @@ class _LoginFormState extends State<LoginForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
+                    key: LoginPage.usernameKey,
                     controller: _usernameController,
                     keyboardType: TextInputType.name,
                     onFieldSubmitted: (_) => _login(model),
@@ -93,6 +99,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                   const Gap(16),
                   TextFormField(
+                    key: LoginPage.passwordKey,
                     controller: _passwordController,
                     keyboardType: TextInputType.visiblePassword,
                     onFieldSubmitted: (_) => _login(model),
@@ -111,6 +118,7 @@ class _LoginFormState extends State<LoginForm> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
+                          key: LoginPage.loginKey,
                           onPressed: () => _login(model),
                           style: primaryButton,
                           child: const Text('Login'),
@@ -120,6 +128,7 @@ class _LoginFormState extends State<LoginForm> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
+                          key: LoginPage.registerKey,
                           onPressed: () => _register(model),
                           style: secondaryButton,
                           child: const Text('Register'),
