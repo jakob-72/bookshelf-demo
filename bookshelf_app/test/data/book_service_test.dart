@@ -11,12 +11,10 @@ import 'package:bookshelf_app/data/dto/delete_book_response.dart'
 import 'package:bookshelf_app/data/models/book.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'book_service_test.mocks.dart';
+class MockDio extends Mock implements Dio {}
 
-@GenerateMocks([Dio])
 void main() {
   late Dio dio;
   late BookService bookService;
@@ -30,10 +28,10 @@ void main() {
     const path = '/check';
 
     test('returns true when token is valid', () async {
-      when(dio.get(
-        path,
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.get(
+            path,
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 200,
             requestOptions: RequestOptions(),
           ));
@@ -44,10 +42,10 @@ void main() {
     });
 
     test('returns false when token is invalid', () async {
-      when(dio.get(
-        path,
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.get(
+            path,
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 401,
             requestOptions: RequestOptions(),
           ));
@@ -58,10 +56,10 @@ void main() {
     });
 
     test('returns false when an error occurs', () async {
-      when(dio.get(
-        path,
-        options: anyNamed('options'),
-      )).thenThrow(DioException(
+      when(() => dio.get(
+            path,
+            options: any(named: 'options'),
+          )).thenThrow(DioException(
         requestOptions: RequestOptions(path: path),
         response: Response(
           requestOptions: RequestOptions(path: path),
@@ -79,7 +77,7 @@ void main() {
 
     test('returns GetBooksResponse.success when books are fetched successfully',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 200,
                 data: [
@@ -99,7 +97,7 @@ void main() {
 
     test('returns GetBooksResponse.unauthorized when response status is 401',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 401,
                 requestOptions: RequestOptions(),
@@ -112,7 +110,7 @@ void main() {
 
     test('returns GetBooksResponse.error for unexpected status codes',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 400,
                 data: 'testError',
@@ -129,7 +127,8 @@ void main() {
     });
 
     test('returns GetBooksResponse.error when request fails', () async {
-      when(dio.get(path, options: anyNamed('options'))).thenThrow(DioException(
+      when(() => dio.get(path, options: any(named: 'options')))
+          .thenThrow(DioException(
         requestOptions: RequestOptions(path: path),
         response: Response(
           requestOptions: RequestOptions(path: path),
@@ -148,7 +147,7 @@ void main() {
     test(
         'returns GetBooksResponse.error when books are missing required fields',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 200,
                 data: [
@@ -168,7 +167,7 @@ void main() {
 
     test('returns GetBooksResponse.error when response is invalid json',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 200,
                 data: '{invalidJson',
@@ -190,7 +189,7 @@ void main() {
 
     test('returns GetBookResponse.success when book is fetched successfully',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 200,
                 data: {'id': '1', 'title': 'Book 1', 'author': 'Test'},
@@ -206,7 +205,7 @@ void main() {
 
     test('returns GetBookResponse.unauthorized when response status is 401',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 401,
                 requestOptions: RequestOptions(),
@@ -219,7 +218,7 @@ void main() {
 
     test('returns GetBookResponse.notFound when response status is 404',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 404,
                 requestOptions: RequestOptions(),
@@ -231,7 +230,7 @@ void main() {
     });
 
     test('returns GetBookResponse.error for unexpected status codes', () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 400,
                 data: 'testError',
@@ -248,7 +247,8 @@ void main() {
     });
 
     test('returns GetBookResponse.error when request fails', () async {
-      when(dio.get(path, options: anyNamed('options'))).thenThrow(DioException(
+      when(() => dio.get(path, options: any(named: 'options')))
+          .thenThrow(DioException(
         requestOptions: RequestOptions(path: path),
         response: Response(
           requestOptions: RequestOptions(path: path),
@@ -266,7 +266,7 @@ void main() {
 
     test('returns GetBookResponse.error when response is invalid json',
         () async {
-      when(dio.get(path, options: anyNamed('options')))
+      when(() => dio.get(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 200,
                 data: '{invalidJson',
@@ -288,7 +288,8 @@ void main() {
 
     test('returns AddBookResponse.success when book is added successfully',
         () async {
-      when(dio.post(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.post(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 201,
                 data: {'id': '1', 'title': 'New Book', 'author': 'Test'},
@@ -305,7 +306,8 @@ void main() {
 
     test('returns AddBookResponse.unauthorized when response status is 401',
         () async {
-      when(dio.post(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.post(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 401,
                 requestOptions: RequestOptions(),
@@ -319,7 +321,8 @@ void main() {
 
     test('returns AddBookResponse.conflict when response status is 409',
         () async {
-      when(dio.post(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.post(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 409,
                 requestOptions: RequestOptions(),
@@ -332,7 +335,8 @@ void main() {
     });
 
     test('returns AddBookResponse.error for unexpected status codes', () async {
-      when(dio.post(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.post(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 400,
                 data: 'Bad Request',
@@ -350,8 +354,9 @@ void main() {
     });
 
     test('returns AddBookResponse.error when request fails', () async {
-      when(dio.post(path, data: anyNamed('data'), options: anyNamed('options')))
-          .thenThrow(DioException(
+      when(() => dio.post(path,
+          data: any(named: 'data'),
+          options: any(named: 'options'))).thenThrow(DioException(
         requestOptions: RequestOptions(path: path),
         response: Response(
           requestOptions: RequestOptions(path: path),
@@ -370,7 +375,8 @@ void main() {
 
     test('returns AddBookResponse.error when response is invalid json',
         () async {
-      when(dio.post(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.post(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 201,
                 data: '{invalidJson',
@@ -393,7 +399,8 @@ void main() {
 
     test('returns UpdateBookResponse.success when book is updated successfully',
         () async {
-      when(dio.put(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.put(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 200,
                 data: {'id': '1', 'title': 'Updated Book', 'author': 'Test'},
@@ -410,7 +417,8 @@ void main() {
 
     test('returns UpdateBookResponse.unauthorized when response status is 401',
         () async {
-      when(dio.put(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.put(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 401,
                 requestOptions: RequestOptions(),
@@ -424,7 +432,8 @@ void main() {
 
     test('returns UpdateBookResponse.notFound when response status is 404',
         () async {
-      when(dio.put(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.put(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 404,
                 requestOptions: RequestOptions(),
@@ -438,7 +447,8 @@ void main() {
 
     test('returns UpdateBookResponse.error for unexpected status codes',
         () async {
-      when(dio.put(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.put(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 400,
                 data: 'Bad Request',
@@ -456,8 +466,9 @@ void main() {
     });
 
     test('returns UpdateBookResponse.error when request fails', () async {
-      when(dio.put(path, data: anyNamed('data'), options: anyNamed('options')))
-          .thenThrow(DioException(
+      when(() => dio.put(path,
+          data: any(named: 'data'),
+          options: any(named: 'options'))).thenThrow(DioException(
         requestOptions: RequestOptions(path: path),
         response: Response(
           requestOptions: RequestOptions(path: path),
@@ -476,7 +487,8 @@ void main() {
 
     test('returns UpdateBookResponse.error when response is invalid json',
         () async {
-      when(dio.put(path, data: anyNamed('data'), options: anyNamed('options')))
+      when(() => dio.put(path,
+              data: any(named: 'data'), options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 200,
                 data: '{invalidJson',
@@ -499,7 +511,7 @@ void main() {
 
     test('returns DeleteBookResponse.success when book is deleted successfully',
         () async {
-      when(dio.delete(path, options: anyNamed('options')))
+      when(() => dio.delete(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 204,
                 requestOptions: RequestOptions(),
@@ -512,7 +524,7 @@ void main() {
 
     test('returns DeleteBookResponse.unauthorized when response status is 401',
         () async {
-      when(dio.delete(path, options: anyNamed('options')))
+      when(() => dio.delete(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 401,
                 requestOptions: RequestOptions(),
@@ -525,7 +537,7 @@ void main() {
 
     test('returns DeleteBookResponse.notFound when response status is 404',
         () async {
-      when(dio.delete(path, options: anyNamed('options')))
+      when(() => dio.delete(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 404,
                 requestOptions: RequestOptions(),
@@ -538,7 +550,7 @@ void main() {
 
     test('returns DeleteBookResponse.error for unexpected status codes',
         () async {
-      when(dio.delete(path, options: anyNamed('options')))
+      when(() => dio.delete(path, options: any(named: 'options')))
           .thenAnswer((_) async => Response(
                 statusCode: 400,
                 data: 'Bad Request',
@@ -555,7 +567,7 @@ void main() {
     });
 
     test('returns DeleteBookResponse.error when request fails', () async {
-      when(dio.delete(path, options: anyNamed('options')))
+      when(() => dio.delete(path, options: any(named: 'options')))
           .thenThrow(DioException(
         requestOptions: RequestOptions(path: path),
         response: Response(

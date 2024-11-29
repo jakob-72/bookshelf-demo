@@ -4,12 +4,10 @@ import 'package:bookshelf_app/data/dto/register_response.dart'
     as register_response;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-import 'auth_service_test.mocks.dart';
+class MockDio extends Mock implements Dio {}
 
-@GenerateMocks([Dio])
 void main() {
   late Dio dio;
   late AuthService authService;
@@ -25,14 +23,14 @@ void main() {
     test('returns a token when login succeeds', () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 200,
             data: {'token': 'testToken'},
             requestOptions: RequestOptions(),
@@ -48,14 +46,14 @@ void main() {
         () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 401,
             requestOptions: RequestOptions(),
           ));
@@ -68,14 +66,14 @@ void main() {
     test('returns AuthResponse.error for an unexpected status code', () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 400,
             data: 'testError',
             requestOptions: RequestOptions(),
@@ -90,14 +88,14 @@ void main() {
     test('returns AuthResponse.error when connection fails', () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenThrow(DioException(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenThrow(DioException(
         requestOptions: RequestOptions(),
         response: Response(
           requestOptions: RequestOptions(),
@@ -114,14 +112,14 @@ void main() {
         () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 200,
             data: '{invalidJson',
             requestOptions: RequestOptions(),
@@ -144,14 +142,14 @@ void main() {
         () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 201,
             requestOptions: RequestOptions(),
           ));
@@ -166,14 +164,14 @@ void main() {
         () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 409,
             requestOptions: RequestOptions(),
           ));
@@ -187,14 +185,14 @@ void main() {
         () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenAnswer((_) async => Response(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenAnswer((_) async => Response(
             statusCode: 400,
             data: 'testError',
             requestOptions: RequestOptions(),
@@ -209,14 +207,14 @@ void main() {
     test('returns RegisterResponse.error when connection fails', () async {
       const username = 'username';
       const password = 'password';
-      when(dio.post(
-        path,
-        data: {
-          'username': username,
-          'password': password,
-        },
-        options: anyNamed('options'),
-      )).thenThrow(DioException(
+      when(() => dio.post(
+            path,
+            data: {
+              'username': username,
+              'password': password,
+            },
+            options: any(named: 'options'),
+          )).thenThrow(DioException(
         requestOptions: RequestOptions(),
         response: Response(
           requestOptions: RequestOptions(),
