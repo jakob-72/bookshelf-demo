@@ -20,4 +20,15 @@ class AddBookRequest {
         'rating': rating,
         'read': read,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AddBookRequest &&
+          runtimeType == other.runtimeType &&
+          title == other.title &&
+          author == other.author;
+
+  @override
+  int get hashCode => title.hashCode ^ author.hashCode;
 }
