@@ -5,6 +5,12 @@ import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 
 class AddBookDialog extends StatefulWidget {
+  static const titleKey = Key('title');
+  static const authorKey = Key('author');
+  static const genreKey = Key('genre');
+  static const ratingKey = Key('rating');
+  static const submitKey = Key('submit');
+
   final BookOverviewPageModel model;
 
   const AddBookDialog({super.key, required this.model});
@@ -34,6 +40,7 @@ class _AddBookDialogState extends State<AddBookDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextFormField(
+                key: AddBookDialog.titleKey,
                 controller: _titleController,
                 decoration: inputDecoration('Title', required: true),
                 validator: (value) {
@@ -45,6 +52,7 @@ class _AddBookDialogState extends State<AddBookDialog> {
               ),
               const Gap(16),
               TextFormField(
+                key: AddBookDialog.authorKey,
                 controller: _authorController,
                 decoration: inputDecoration('Author', required: true),
                 validator: (value) {
@@ -56,11 +64,13 @@ class _AddBookDialogState extends State<AddBookDialog> {
               ),
               const Gap(16),
               TextFormField(
+                key: AddBookDialog.genreKey,
                 controller: _genreController,
                 decoration: inputDecoration('Genre'),
               ),
               const Gap(16),
               TextFormField(
+                key: AddBookDialog.ratingKey,
                 controller: _ratingController,
                 decoration: inputDecoration('Rating'),
                 keyboardType: TextInputType.number,
@@ -92,10 +102,11 @@ class _AddBookDialogState extends State<AddBookDialog> {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => widget.model.pop(),
             child: const Text('Cancel'),
           ),
           ElevatedButton(
+            key: AddBookDialog.submitKey,
             onPressed: () {
               if (!_formKey.currentState!.validate()) {
                 return;
@@ -107,7 +118,7 @@ class _AddBookDialogState extends State<AddBookDialog> {
                 rating: int.tryParse(_ratingController.text),
                 read: _read,
               );
-              Navigator.of(context).pop();
+              widget.model.pop();
             },
             style: primaryButton,
             child: const Text('Submit'),

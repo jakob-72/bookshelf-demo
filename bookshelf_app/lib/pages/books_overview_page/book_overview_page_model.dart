@@ -37,7 +37,7 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
         _books = books;
         state = Idle(_books);
       },
-      unauthorized: () => navigateToLoginPage(),
+      unauthorized: navigateToLoginPage,
       error: (error) => state = Error(_books, error),
     );
   }
@@ -72,6 +72,8 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
     await logoutUseCase.logout();
     router.replace(LoginRoute());
   }
+
+  void pop() => router.popForced();
 
   void navigateToLoginPage() => router.replace(LoginRoute(unauthorized: true));
 
