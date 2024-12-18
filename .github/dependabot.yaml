@@ -11,6 +11,11 @@ updates:
     schedule:
       interval: "weekly"
 
+  - package-ecosystem: "pub"
+    directory: "/bookshelf_app"
+    schedule:
+      interval: "weekly"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
