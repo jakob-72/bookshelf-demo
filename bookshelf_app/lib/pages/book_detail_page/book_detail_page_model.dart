@@ -23,6 +23,12 @@ class BookDetailPageModel extends StateNotifier<BookDetailPageState>
 
   DeleteBookUseCase get deleteBookUseCase => read<DeleteBookUseCase>();
 
+  @override
+  void initState() {
+    reload();
+    super.initState();
+  }
+
   Future<void> reload() async {
     state = Loading();
     final result = await getBookUseCase.getBook(bookId);

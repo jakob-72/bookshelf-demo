@@ -5,7 +5,6 @@ import 'package:bookshelf_app/pages/book_detail_page/delete_book_dialog.dart';
 import 'package:bookshelf_app/pages/book_detail_page/state.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
 import 'package:bookshelf_app/shared/app_router.gr.dart';
-import 'package:bookshelf_app/shared/extensions.dart';
 import 'package:bookshelf_app/shared/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
@@ -58,12 +57,6 @@ class _BookDetailBodyState extends State<BookDetailBody> {
   late Book book;
 
   @override
-  void initState() {
-    context.read<BookDetailPageModel>().reload();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final state = context.watch<BookDetailPageState>();
     if (state is Loading) {
@@ -71,7 +64,7 @@ class _BookDetailBodyState extends State<BookDetailBody> {
     } else if (state is Idle) {
       setState(() => book = state.book);
     } else if (state is Error) {
-      context.showSnackbar(state.message);
+      return Center(child: Text(state.message));
     }
     return BookDetailForm(book: book);
   }
