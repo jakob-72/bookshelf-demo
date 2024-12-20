@@ -5,7 +5,7 @@ on:
     branches:
       - main
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
 
 jobs:
   check-auth-service:
@@ -41,10 +41,10 @@ jobs:
           cache: false
       - name: Build
         working-directory: bookshelf-service
-        run: go build ./... -v
+        run: go build ./...
       - name: Test
         working-directory: bookshelf-service
-        run: go test ./... -v
+        run: go test ./...
 
   check-app:
     name: Check App
@@ -56,16 +56,16 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version: 3.5.4
+          flutter-version-file: bookshelf_app/pubspec.yaml
       - name: Get Dependencies
-        working-directory: flutter_frontend
+        working-directory: bookshelf_app
         run: flutter pub get
       - name: Run Builder
-        working-directory: flutter_frontend
+        working-directory: bookshelf_app
         run: dart pub run build_runner build --delete-conflicting-outputs
       - name: Analyze Code
-        working-directory: flutter_frontend
+        working-directory: bookshelf_app
         run: flutter analyze
       - name: Run Tests
-        working-directory: flutter_frontend
+        working-directory: bookshelf_app
         run: flutter test
