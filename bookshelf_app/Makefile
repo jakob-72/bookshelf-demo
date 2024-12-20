@@ -1,36 +1,27 @@
-export JWT_SECRET=secret
-export JWT_VALIDITY_SECONDS=3600
-
 .PHONY: default
 default: help
 
-.PHONY: check
-check: ## Check the code for errors
-	@cargo check
+.PHONY: clean
+clean: ## Clean the project
+	@flutter clean
 
 .PHONY: format
 format: ## Format the code
-	@cargo fmt
+	@dart format .
 
-.PHONY: clean
-clean: ## Clean the project
-	@cargo clean
+.PHONY: analyze
+analyze: ## Analyze the code
+	@dart analyze .
 
 .PHONY: test
-test: ## Run the tests
-	@cargo test
-
-.PHONY: lint
-lint: ## Run the linter
-	@cargo clippy
-
-.PHONY: build
-build: ## Build the application in release mode
-	@cargo build --release
+test: ## Run tests
+	@flutter test
 
 .PHONY: run
 run: ## Run the application
-	@cargo run
+	@flutter pub get
+	@dart run build_runner build --delete-conflicting-outputs
+	@flutter run
 
 .PHONY: help
 help: ## Shows help message
