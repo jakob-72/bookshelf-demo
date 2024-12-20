@@ -56,7 +56,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version-file: bookshelf_app/pubspec.yaml
+          flutter-version: '3.27.1'
       - name: Get Dependencies
         working-directory: bookshelf_app
         run: flutter pub get
