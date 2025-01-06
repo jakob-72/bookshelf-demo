@@ -111,22 +111,7 @@ class App extends StatelessWidget {
         child: MaterialApp.router(
           title: 'Bookshelf',
           theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
-            scaffoldBackgroundColor: Colors.grey[850],
-            appBarTheme: AppBarTheme(
-              actionsIconTheme: const IconThemeData(color: Colors.grey),
-              iconTheme: const IconThemeData(color: Colors.grey),
-              backgroundColor: Colors.grey[850],
-              titleTextStyle: const TextStyle(color: Colors.grey),
-            ),
             useMaterial3: true,
-            primaryColor: Colors.grey,
-            dialogBackgroundColor: Colors.grey[800],
-            textTheme: const TextTheme(
-              bodyLarge: TextStyle(color: Colors.grey),
-              bodyMedium: TextStyle(color: Colors.grey),
-              bodySmall: TextStyle(color: Colors.grey),
-            ),
           ),
           routerConfig: router.config(),
         ),

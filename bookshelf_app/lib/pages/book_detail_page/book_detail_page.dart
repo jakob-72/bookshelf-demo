@@ -117,19 +117,19 @@ class _BookDetailFormState extends State<BookDetailForm> {
           children: [
             TextFormField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: inputDecoration('Title'),
             ),
             TextFormField(
               controller: _authorController,
-              decoration: const InputDecoration(labelText: 'Author'),
+              decoration: inputDecoration('Author'),
             ),
             TextFormField(
               controller: _genreController,
-              decoration: const InputDecoration(labelText: 'Genre'),
+              decoration: inputDecoration('Genre'),
             ),
             TextFormField(
               controller: _ratingController,
-              decoration: const InputDecoration(labelText: 'Rating'),
+              decoration: inputDecoration('Rating'),
               keyboardType: TextInputType.number,
             ),
             SwitchListTile(

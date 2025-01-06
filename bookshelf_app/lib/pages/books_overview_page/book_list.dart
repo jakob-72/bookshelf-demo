@@ -67,17 +67,17 @@ class BookListItem extends StatelessWidget {
   Row _buildRating() {
     final List<Icon> icons = [];
     final rating = book.rating ?? 0;
-    for (var i = 1; i <= 4; i++) {
+    for (var i = 0; i <= 4; i++) {
       if (i < rating) {
         icons.add(const Icon(
           Icons.star,
-          color: Colors.yellowAccent,
+          color: Colors.orange,
           size: 16,
         ));
       } else {
         icons.add(const Icon(
           Icons.star_border_outlined,
-          color: Colors.yellowAccent,
+          color: Colors.orange,
           size: 16,
         ));
       }
