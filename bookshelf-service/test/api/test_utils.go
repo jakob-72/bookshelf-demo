@@ -8,11 +8,11 @@ import (
 // ### GetBooks
 
 type MockedGetBooksUseCase struct {
-	GetBooksFn func(userId string, filter map[string]string) ([]models.Book, error)
+	GetBooksFn func(userId string, search string) ([]models.Book, error)
 }
 
-func (m *MockedGetBooksUseCase) GetBooks(userId string, filter map[string]string) ([]models.Book, error) {
-	return m.GetBooksFn(userId, filter)
+func (m *MockedGetBooksUseCase) GetBooks(userId string, search string) ([]models.Book, error) {
+	return m.GetBooksFn(userId, search)
 }
 
 // ### GetBook

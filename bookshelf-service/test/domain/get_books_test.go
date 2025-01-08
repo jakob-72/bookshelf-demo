@@ -10,7 +10,7 @@ import (
 
 func TestGetBooksSuccessfully(t *testing.T) {
 	repository := &MockedRepository{
-		GetBooksFn: func(userID string, filter map[string]string) ([]models.Book, error) {
+		GetBooksFn: func(userID string, search string) ([]models.Book, error) {
 			return []models.Book{
 				{
 					ID:     "1",
@@ -26,7 +26,7 @@ func TestGetBooksSuccessfully(t *testing.T) {
 	}
 	useCase := domain.NewGetBooksUseCase(repository)
 
-	books, err := useCase.GetBooks("1", nil)
+	books, err := useCase.GetBooks("1", "")
 
 	assert.NoError(t, err)
 	assert.Len(t, books, 1)
@@ -34,13 +34,13 @@ func TestGetBooksSuccessfully(t *testing.T) {
 
 func TestGetBooksWithError(t *testing.T) {
 	repository := &MockedRepository{
-		GetBooksFn: func(userID string, filter map[string]string) ([]models.Book, error) {
+		GetBooksFn: func(userID string, search string) ([]models.Book, error) {
 			return nil, fmt.Errorf("error connecting to the database")
 		},
 	}
 	useCase := domain.NewGetBooksUseCase(repository)
 
-	_, err := useCase.GetBooks("1", nil)
+	_, err := useCase.GetBooks("1", "")
 
 	assert.Error(t, err)
 	assert.IsType(t, &domain.UseCaseError{}, err)

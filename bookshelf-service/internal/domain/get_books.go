@@ -8,15 +8,15 @@ import (
 
 // GetBooksUseCase is the interface that provides the GetBooks method
 type GetBooksUseCase interface {
-	GetBooks(userId string, filter map[string]string) ([]models.Book, error)
+	GetBooks(userId string, search string) ([]models.Book, error)
 }
 
 type getBooksUseCase struct {
 	repository database.Repository
 }
 
-func (useCase *getBooksUseCase) GetBooks(userId string, filter map[string]string) ([]models.Book, error) {
-	books, err := useCase.repository.GetBooks(userId, filter)
+func (useCase *getBooksUseCase) GetBooks(userId string, search string) ([]models.Book, error) {
+	books, err := useCase.repository.GetBooks(userId, search)
 	if err != nil {
 		return nil, &UseCaseError{
 			Code:    InternalError,

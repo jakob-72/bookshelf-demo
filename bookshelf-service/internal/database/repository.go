@@ -5,12 +5,11 @@ import (
 	"bookshelf-service/internal/domain/models"
 	"fmt"
 	"github.com/google/uuid"
-	"slices"
 )
 
 // Repository is an interface that defines the methods to interact with the database
 type Repository interface {
-	GetBooks(userID string, filter map[string]string) ([]models.Book, error)
+	GetBooks(userID string, search string) ([]models.Book, error)
 	GetBookByID(userID, bookID string) (models.Book, error)
 	GetBookByTitleAndAuthor(userID, title, author string) (models.Book, error)
 	CreateBook(userID, title, author, genre string, read bool, rating int) (models.Book, error)
@@ -21,10 +20,10 @@ type Repository interface {
 type repository struct {
 }
 
-var filterableColumns = []string{"title", "author", "genre", "read", "rating"}
+var searchableColumns = []string{"title", "author", "genre"}
 
-// GetBooks retrieves books based on userID and filter criteria
-func (r *repository) GetBooks(userID string, filter map[string]string) ([]models.Book, error) {
+// GetBooks retrieves books based on userID and search criteria
+func (r *repository) GetBooks(userID string, search string) ([]models.Book, error) {
 	db, err := GetConnection()
 	if err != nil {
 		return nil, err
@@ -32,10 +31,9 @@ func (r *repository) GetBooks(userID string, filter map[string]string) ([]models
 
 	var books []models.Book
 	query := db.Where("user_id = ?", userID)
-	for key, value := range filter {
-		if slices.Contains(filterableColumns, key) {
-			query = query.Where(fmt.Sprintf("%s = ?", key), value)
-		}
+	if search != "" {
+		wrappedSearch := "%" + search + "%"
+		query = query.Where("title LIKE ? OR author LIKE ? OR genre LIKE ?", wrappedSearch, wrappedSearch, wrappedSearch)
 	}
 	query.Find(&books)
 	return books, nil

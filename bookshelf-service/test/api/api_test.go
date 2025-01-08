@@ -33,7 +33,7 @@ func TestHealthEndpoint(t *testing.T) {
 
 func TestGetBooksEndpointSuccessfully(t *testing.T) {
 	provider := shared.Provider{
-		GetBooks: &MockedGetBooksUseCase{GetBooksFn: func(userId string, filter map[string]string) ([]models.Book, error) {
+		GetBooks: &MockedGetBooksUseCase{GetBooksFn: func(userId string, search string) ([]models.Book, error) {
 			return []models.Book{{
 				ID:     "1",
 				UserID: "1",
@@ -70,7 +70,7 @@ func TestGetBooksEndpointUnauthorized(t *testing.T) {
 
 func TestGetBooksEndpointWithInternalError(t *testing.T) {
 	provider := shared.Provider{
-		GetBooks: &MockedGetBooksUseCase{GetBooksFn: func(userId string, filter map[string]string) ([]models.Book, error) {
+		GetBooks: &MockedGetBooksUseCase{GetBooksFn: func(userId string, search string) ([]models.Book, error) {
 			return nil, &domain.UseCaseError{Code: domain.InternalError, Message: "internal error"}
 		}},
 	}

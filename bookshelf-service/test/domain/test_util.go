@@ -3,7 +3,7 @@ package domain
 import "bookshelf-service/internal/domain/models"
 
 type MockedRepository struct {
-	GetBooksFn                func(userId string, filter map[string]string) ([]models.Book, error)
+	GetBooksFn                func(userId string, search string) ([]models.Book, error)
 	GetBookByIDFn             func(userId, bookID string) (models.Book, error)
 	GetBookByTitleAndAuthorFn func(userId, title, author string) (models.Book, error)
 	CreateBookFn              func(userId, title, author, genre string, read bool, rating int) (models.Book, error)
@@ -11,8 +11,8 @@ type MockedRepository struct {
 	DeleteBookFn              func(userId, bookID string) error
 }
 
-func (m *MockedRepository) GetBooks(userId string, filter map[string]string) ([]models.Book, error) {
-	return m.GetBooksFn(userId, filter)
+func (m *MockedRepository) GetBooks(userId string, search string) ([]models.Book, error) {
+	return m.GetBooksFn(userId, search)
 }
 
 func (m *MockedRepository) GetBookByID(userId, bookID string) (models.Book, error) {

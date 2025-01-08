@@ -23,6 +23,8 @@ func CheckToken(c *fiber.Ctx) error {
 }
 
 // GetBooks returns all books for the user - Authenticated user is required
+// Query parameters:
+// search: string - Search for books by title, author or genre
 // Success: 200 - Returns a list of books
 // Error: 401 - Unauthorized
 func GetBooks(c *fiber.Ctx) error {
@@ -32,7 +34,7 @@ func GetBooks(c *fiber.Ctx) error {
 	}
 
 	useCase := Provider.GetBooks
-	books, err := useCase.GetBooks(userId, c.Queries())
+	books, err := useCase.GetBooks(userId, c.Query("search"))
 	if err != nil {
 		return c.Status(handleError(err)).SendString(err.Error())
 	}
