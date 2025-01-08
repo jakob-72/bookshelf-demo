@@ -24,7 +24,7 @@ void main() {
       'returns GetBooksResponse.success when token is set and request succeeds',
       () async {
     when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.getBooks('token'))
+    when(() => bookService.getBooks('token', null))
         .thenAnswer((_) => Future.value(GetBooksResponse.success([])));
 
     final result = await useCase.getBooks();

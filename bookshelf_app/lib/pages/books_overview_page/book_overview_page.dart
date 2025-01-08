@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:bookshelf_app/pages/books_overview_page/add_book_dialog.dart';
 import 'package:bookshelf_app/pages/books_overview_page/book_list.dart';
 import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
+import 'package:bookshelf_app/pages/books_overview_page/search_dialog.dart';
 import 'package:bookshelf_app/pages/books_overview_page/state.dart';
 import 'package:bookshelf_app/shared/extensions.dart';
 import 'package:bookshelf_app/shared/styles.dart';
@@ -29,6 +30,16 @@ class BookOverviewPage extends StatelessWidget {
                     tooltip: 'Refresh',
                     onPressed: () =>
                         context.read<BookOverviewPageModel>().refresh(),
+                  ),
+                  IconButton(
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (_) => SearchDialog(
+                        model: context.read<BookOverviewPageModel>(),
+                      ),
+                    ),
+                    tooltip: 'Search',
+                    icon: const Icon(Icons.search),
                   ),
                   IconButton(
                     icon: const Icon(Icons.logout),

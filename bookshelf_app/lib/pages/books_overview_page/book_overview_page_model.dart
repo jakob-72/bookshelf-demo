@@ -29,9 +29,9 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
     refresh();
   }
 
-  Future<void> refresh() async {
+  Future<void> refresh({String? searchTerm}) async {
     state = Loading(_books);
-    final result = await getBooksUseCase.getBooks();
+    final result = await getBooksUseCase.getBooks(searchTerm: searchTerm);
     result.when(
       success: (books) {
         _books = books;

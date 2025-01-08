@@ -87,12 +87,38 @@ void main() {
                 requestOptions: RequestOptions(),
               ));
 
-      final result = await bookService.getBooks('testToken');
+      final result = await bookService.getBooks('testToken', null);
 
       expect(result, isA<books_response.Success>());
       expect((result as books_response.Success).books.length, 2);
       expect(result.books[0].id, '1');
       expect(result.books[1].title, 'Book 2');
+    });
+
+    test(
+        'returns GetBooksResponse.success and builds query correctly when searchTerm is provided',
+        () async {
+      when(() => dio.get(path,
+              options: any(named: 'options'),
+              queryParameters: any(named: 'queryParameters')))
+          .thenAnswer((_) async => Response(
+                statusCode: 200,
+                data: [
+                  {'id': '1', 'title': 'Book 1', 'author': 'Test'},
+                  {'id': '2', 'title': 'Book 2', 'author': 'Test'},
+                ],
+                requestOptions: RequestOptions(),
+              ));
+
+      final result = await bookService.getBooks('testToken', 'testSearch');
+
+      expect(result, isA<books_response.Success>());
+      expect((result as books_response.Success).books.length, 2);
+      expect(result.books[0].id, '1');
+      expect(result.books[1].title, 'Book 2');
+      verify(() => dio.get(path,
+          options: any(named: 'options'),
+          queryParameters: {'search': 'testSearch'})).called(1);
     });
 
     test('returns GetBooksResponse.unauthorized when response status is 401',
@@ -103,7 +129,7 @@ void main() {
                 requestOptions: RequestOptions(),
               ));
 
-      final result = await bookService.getBooks('testToken');
+      final result = await bookService.getBooks('testToken', null);
 
       expect(result, isA<books_response.Unauthorized>());
     });
@@ -117,7 +143,7 @@ void main() {
                 requestOptions: RequestOptions(),
               ));
 
-      final result = await bookService.getBooks('testToken');
+      final result = await bookService.getBooks('testToken', null);
 
       expect(result, isA<books_response.Error>());
       expect(
@@ -135,7 +161,7 @@ void main() {
         ),
       ));
 
-      final result = await bookService.getBooks('testToken');
+      final result = await bookService.getBooks('testToken', null);
 
       expect(result, isA<books_response.Error>());
       expect(
@@ -156,7 +182,7 @@ void main() {
                 requestOptions: RequestOptions(),
               ));
 
-      final result = await bookService.getBooks('testToken');
+      final result = await bookService.getBooks('testToken', null);
 
       expect(result, isA<books_response.Error>());
       expect(
@@ -174,7 +200,7 @@ void main() {
                 requestOptions: RequestOptions(),
               ));
 
-      final result = await bookService.getBooks('testToken');
+      final result = await bookService.getBooks('testToken', null);
 
       expect(result, isA<books_response.Error>());
       expect(

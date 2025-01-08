@@ -30,9 +30,10 @@ class BookService {
     }
   }
 
-  Future<GetBooksResponse> getBooks(String token) async {
+  Future<GetBooksResponse> getBooks(String token, String? searchTerm) async {
     const operation = 'bookService_getBooks';
     const path = '/books';
+
     Response? response;
     try {
       response = await dio.get(
@@ -41,6 +42,7 @@ class BookService {
           headers: {'Authorization': 'Bearer $token'},
           validateStatus: (_) => true,
         ),
+        queryParameters: searchTerm == null ? null : {'search': searchTerm},
       );
       if (response.statusCode == 200) {
         final books = (response.data as List)

@@ -8,11 +8,11 @@ class GetBooksUseCase {
 
   GetBooksUseCase({required this.storage, required this.bookService});
 
-  Future<GetBooksResponse> getBooks() async {
+  Future<GetBooksResponse> getBooks({String? searchTerm}) async {
     final token = await storage.token;
     if (token == null) {
       return GetBooksResponse.unauthorized();
     }
-    return bookService.getBooks(token);
+    return bookService.getBooks(token, searchTerm);
   }
 }
