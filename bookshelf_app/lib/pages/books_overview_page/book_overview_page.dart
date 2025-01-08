@@ -108,9 +108,52 @@ class BookOverviewBody extends StatelessWidget {
               ],
             );
           }
-          return BookList(
-            books: books,
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _SearchLabel(
+                  searchTerm: (state as Idle).searchTerm, model: model),
+              if ((state as Idle).searchTerm != null) const Gap(16),
+              Expanded(
+                child: BookList(
+                  books: books,
+                ),
+              ),
+            ],
           );
         },
       );
+}
+
+class _SearchLabel extends StatelessWidget {
+  final BookOverviewPageModel model;
+  final String? searchTerm;
+
+  const _SearchLabel({required this.model, this.searchTerm});
+
+  @override
+  Widget build(BuildContext context) {
+    if (searchTerm == null || searchTerm!.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(searchTerm!),
+          const SizedBox(width: 4),
+          InkWell(
+            onTap: () => model.refresh(),
+            child: const Icon(Icons.close, size: 18),
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -7,7 +7,9 @@ sealed class BooksOverviewPageState {
 }
 
 class Idle extends BooksOverviewPageState {
-  Idle(super.books);
+  final String? searchTerm;
+
+  Idle(super.books, {this.searchTerm});
 }
 
 class Loading extends BooksOverviewPageState {

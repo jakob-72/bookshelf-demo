@@ -35,7 +35,7 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
     result.when(
       success: (books) {
         _books = books;
-        state = Idle(_books);
+        state = Idle(_books, searchTerm: searchTerm);
       },
       unauthorized: navigateToLoginPage,
       error: (error) => state = Error(_books, error),
