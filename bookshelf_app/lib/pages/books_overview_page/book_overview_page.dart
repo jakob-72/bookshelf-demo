@@ -147,7 +147,7 @@ class _SearchLabel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(searchTerm!),
-          const SizedBox(width: 4),
+          const Gap(4),
           InkWell(
             onTap: () => model.refresh(),
             child: const Icon(Icons.close, size: 18),

@@ -117,10 +117,22 @@ class _BookDetailFormState extends State<BookDetailForm> {
           children: [
             TextFormField(
               controller: _titleController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the title';
+                }
+                return null;
+              },
               decoration: inputDecoration('Title'),
             ),
             TextFormField(
               controller: _authorController,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter the author';
+                }
+                return null;
+              },
               decoration: inputDecoration('Author'),
             ),
             TextFormField(
@@ -130,6 +142,13 @@ class _BookDetailFormState extends State<BookDetailForm> {
             TextFormField(
               controller: _ratingController,
               decoration: inputDecoration('Rating'),
+              validator: (value) {
+                if ((value != null && int.tryParse(value) != null) &&
+                    (int.tryParse(value)! < 0 || int.tryParse(value)! > 5)) {
+                  return 'Please enter a valid number between 0 and 5';
+                }
+                return null;
+              },
               keyboardType: TextInputType.number,
             ),
             SwitchListTile(
