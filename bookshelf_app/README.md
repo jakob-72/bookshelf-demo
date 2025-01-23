@@ -11,6 +11,15 @@ This app features the following pages/screens:
   new book.
 - `BookDetailPage`: A screen that displays the details of a single book and allows the user to edit or delete it.
 
+## Architecture
+
+This app is divided into the following layers split into directories:
+
+- `data`: Data layer that contains data structures and interaction with the backend.
+- `domain`: Domain layer that contains the business logic divided into specific use cases.
+- `pages`: Presentation layer that contains the UI and navigation logic divided into pages/screens.
+- `shared`: Shared resources like themes, widgets etc.
+
 ## Development
 
 To run the app locally, you need to have Flutter installed (https://flutter.dev/docs/get-started/install).

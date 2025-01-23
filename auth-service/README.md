@@ -11,6 +11,14 @@ This service features the following endpoints:
 - `GET /logout/{userId}` - For demo purposes, this endpoint does nothing. In a real-world scenario, this endpoint would
   invalidate the JWT token.
 
+## Architecture
+
+The service is structured into the following subdirectories:
+
+- `api`: Contains the server configuration and API routes.
+- `iam`: Contains the Identity and Access Management (IAM) interface and logic.
+- `models`: Contains the data models and DTOs used by the service.
+
 ## IAM
 
 The service uses a simple in-memory database to store user information for demonstration.

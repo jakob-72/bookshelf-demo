@@ -10,6 +10,15 @@ This service features the following endpoints:
 - `PUT /books/:id`: Update a book
 - `DELETE /books/:id`: Delete a book
 
+## Architecture
+
+The subdirectories of the project within the internal folder are organized as follows:
+
+- `api`: Contains the server configuration, API routes and middleware
+- `database`: Contains the database interface, configuration and repository
+- `domain`: Contains the domain models and business logic for the service
+- `shared`: Contains shared utilities across the service
+
 ## Persistence
 
 For demonstration purposes, the service uses a SQLite database.
