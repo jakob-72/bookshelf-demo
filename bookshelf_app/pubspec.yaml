@@ -39,7 +39,7 @@ dependencies:
   dio: ^5.8.0+1
   gap: ^3.0.1
   provider: ^6.1.2
-  shared_preferences: ^2.5.2
+  shared_preferences: ^2.5.3
   state_notifier: ^1.0.0
   flutter_state_notifier: ^1.0.0
 
