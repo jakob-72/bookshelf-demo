@@ -73,7 +73,7 @@ class BookOverviewPageModel extends StateNotifier<BooksOverviewPageState>
     router.replace(LoginRoute());
   }
 
-  void pop() => router.popForced();
+  void pop() => router.pop();
 
   void navigateToLoginPage() => router.replace(LoginRoute(unauthorized: true));
 

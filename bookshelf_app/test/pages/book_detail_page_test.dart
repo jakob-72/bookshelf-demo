@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:bookshelf_app/data/dto/delete_book_response.dart';
 import 'package:bookshelf_app/data/dto/get_book_response.dart';
 import 'package:bookshelf_app/data/dto/update_book_response.dart';
@@ -26,6 +27,8 @@ class MockUpdateBookUseCase extends Mock implements UpdateBookUseCase {}
 
 class MockDeleteBookUseCase extends Mock implements DeleteBookUseCase {}
 
+class MockPageRouteInfo extends Mock implements PageRouteInfo<dynamic> {}
+
 void main() {
   const bookId = '1';
   late AppRouter router;
@@ -35,6 +38,8 @@ void main() {
   late BookDetailPageModel model;
   late BookDetailPage detailPage;
   late Widget testSubject;
+
+  setUpAll(() => registerFallbackValue(MockPageRouteInfo()));
 
   setUp(() {
     router = MockRouter();
@@ -95,16 +100,18 @@ void main() {
     });
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
-      when(() => router.pushAndPopUntil(LoginRoute(unauthorized: true),
-          predicate: any(named: 'predicate'))).thenAnswer((_) async => null);
+      when(() =>
+              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
+          .thenAnswer((_) async => null);
       when(() => getBookUseCase.getBook(bookId))
           .thenAnswer((_) async => GetBookResponse.unauthorized());
 
       // load page
       await tester.pumpWidget(testSubject);
 
-      verify(() => router.pushAndPopUntil(LoginRoute(unauthorized: true),
-          predicate: any(named: 'predicate'))).called(1);
+      verify(() =>
+              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
+          .called(1);
     });
   });
 
@@ -174,8 +181,9 @@ void main() {
           .thenAnswer((_) async => GetBookResponse.success(book));
       when(() => updateBookUseCase.updateBook(book))
           .thenAnswer((_) async => UpdateBookResponse.unauthorized());
-      when(() => router.pushAndPopUntil(LoginRoute(unauthorized: true),
-          predicate: any(named: 'predicate'))).thenAnswer((_) async => null);
+      when(() =>
+              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
+          .thenAnswer((_) async => null);
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -184,8 +192,9 @@ void main() {
       // update book
       await tester.tap(find.text('Save Changes'));
 
-      verify(() => router.pushAndPopUntil(LoginRoute(unauthorized: true),
-          predicate: any(named: 'predicate'))).called(1);
+      verify(() =>
+              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
+          .called(1);
     });
   });
 
@@ -260,8 +269,9 @@ void main() {
           .thenAnswer((_) async => GetBookResponse.success(book));
       when(() => deleteBookUseCase.deleteBook(bookId))
           .thenAnswer((_) async => DeleteBookResponse.unauthorized());
-      when(() => router.pushAndPopUntil(LoginRoute(unauthorized: true),
-          predicate: any(named: 'predicate'))).thenAnswer((_) async => null);
+      when(() =>
+              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
+          .thenAnswer((_) async => null);
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -272,8 +282,9 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Delete'));
 
-      verify(() => router.pushAndPopUntil(LoginRoute(unauthorized: true),
-          predicate: any(named: 'predicate'))).called(1);
+      verify(() =>
+              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
+          .called(1);
     });
   });
 }

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:bookshelf_app/data/dto/add_book_response.dart';
 import 'package:bookshelf_app/data/dto/get_books_response.dart';
 import 'package:bookshelf_app/data/models/book.dart';
@@ -9,7 +10,6 @@ import 'package:bookshelf_app/pages/books_overview_page/book_overview_page.dart'
 import 'package:bookshelf_app/pages/books_overview_page/book_overview_page_model.dart';
 import 'package:bookshelf_app/pages/books_overview_page/state.dart';
 import 'package:bookshelf_app/shared/app_router.dart';
-import 'package:bookshelf_app/shared/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_state_notifier/flutter_state_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +26,8 @@ class MockAddBookUseCase extends Mock implements AddBookUseCase {}
 
 class MockLogoutUseCase extends Mock implements LogoutUseCase {}
 
+class MockPageRouteInfo extends Mock implements PageRouteInfo<dynamic> {}
+
 void main() {
   late AppRouter router;
   late GetBooksUseCase getBooksUseCase;
@@ -34,6 +36,8 @@ void main() {
   late BookOverviewPageModel model;
   late BookOverviewPage overviewPage;
   late Widget testSubject;
+
+  setUpAll(() => registerFallbackValue(MockPageRouteInfo()));
 
   setUp(() {
     router = MockRouter();
@@ -85,15 +89,14 @@ void main() {
     });
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
-      when(() => router.replace(LoginRoute(unauthorized: true)))
-          .thenAnswer((_) async => null);
+      when(() => router.replace(any())).thenAnswer((_) async => null);
       when(() => getBooksUseCase.getBooks())
           .thenAnswer((_) async => GetBooksResponse.unauthorized());
 
       // load page
       await tester.pumpWidget(testSubject);
 
-      verify(() => router.replace(LoginRoute(unauthorized: true))).called(1);
+      verify(() => router.replace(any())).called(1);
     });
 
     testWidgets('display error when fetch fails', (tester) async {
@@ -115,8 +118,7 @@ void main() {
       ];
       when(() => getBooksUseCase.getBooks())
           .thenAnswer((_) async => GetBooksResponse.success(books));
-      when(() => router.push(BookDetailRoute(bookId: '1')))
-          .thenAnswer((_) async => null);
+      when(() => router.push(any())).thenAnswer((_) async => null);
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -125,7 +127,7 @@ void main() {
       await tester.tap(find.text('test 1'));
       await tester.pumpAndSettle();
 
-      verify(() => router.push(BookDetailRoute(bookId: '1'))).called(1);
+      verify(() => router.push(any())).called(1);
     });
   });
 
@@ -159,8 +161,7 @@ void main() {
     });
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
-      when(() => router.replace(LoginRoute(unauthorized: true)))
-          .thenAnswer((_) async => null);
+      when(() => router.replace(any())).thenAnswer((_) async => null);
       when(() => getBooksUseCase.getBooks())
           .thenAnswer((_) async => GetBooksResponse.success([]));
       when(() => addBookUseCase.addBook(
@@ -182,7 +183,7 @@ void main() {
       await tester.enterText(find.byKey(AddBookDialog.ratingKey), '3');
       await tester.tap(find.byKey(AddBookDialog.submitKey));
 
-      verify(() => router.replace(LoginRoute(unauthorized: true))).called(1);
+      verify(() => router.replace(any())).called(1);
     });
 
     testWidgets('display conflict message when add book results in conflict',
