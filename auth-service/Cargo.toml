@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 actix-cors = "0.7.1"
-actix-web = "4.10.2"
+actix-web = "4.11.0"
 async-std = "1.13.1"
 bcrypt = "0.17.0"
 chrono = "0.4.41"
