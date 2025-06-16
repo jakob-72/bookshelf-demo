@@ -9,7 +9,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/samber/slog-fiber v1.18.0
 	github.com/stretchr/testify v1.10.0
-	gorm.io/driver/sqlite v1.5.7
+	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.30.0
 )
 
