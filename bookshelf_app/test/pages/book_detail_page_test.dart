@@ -65,8 +65,9 @@ void main() {
   group('display book', () {
     testWidgets('display book after successful fetch', (tester) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -76,10 +77,12 @@ void main() {
       expect(find.text('testAuthor'), findsOneWidget);
     });
 
-    testWidgets('display not found message when book is not found',
-        (tester) async {
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.notFound());
+    testWidgets('display not found message when book is not found', (
+      tester,
+    ) async {
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.notFound());
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -89,8 +92,9 @@ void main() {
     });
 
     testWidgets('display error message when error occurs', (tester) async {
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.error('mocked error'));
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.error('mocked error'));
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -100,31 +104,39 @@ void main() {
     });
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
-      when(() =>
-              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
-          .thenAnswer((_) async => null);
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.unauthorized());
+      when(
+        () => router.pushAndPopUntil(any(), predicate: any(named: 'predicate')),
+      ).thenAnswer((_) async => null);
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.unauthorized());
 
       // load page
       await tester.pumpWidget(testSubject);
 
-      verify(() =>
-              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
-          .called(1);
+      verify(
+        () => router.pushAndPopUntil(any(), predicate: any(named: 'predicate')),
+      ).called(1);
     });
   });
 
   group('update book', () {
-    testWidgets('navigate back to overview page when update succeeds',
-        (tester) async {
+    testWidgets('navigate back to overview page when update succeeds', (
+      tester,
+    ) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => updateBookUseCase.updateBook(book))
-          .thenAnswer((_) async => UpdateBookResponse.success(book));
-      when(() => router.pushAndPopUntil(const BookOverviewRoute(),
-          predicate: any(named: 'predicate'))).thenAnswer((_) async => null);
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => updateBookUseCase.updateBook(book),
+      ).thenAnswer((_) async => UpdateBookResponse.success(book));
+      when(
+        () => router.pushAndPopUntil(
+          const BookOverviewRoute(),
+          predicate: any(named: 'predicate'),
+        ),
+      ).thenAnswer((_) async => null);
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -134,16 +146,22 @@ void main() {
       await tester.tap(find.text('Save Changes'));
       await tester.pumpAndSettle();
 
-      verify(() => router.pushAndPopUntil(const BookOverviewRoute(),
-          predicate: any(named: 'predicate'))).called(1);
+      verify(
+        () => router.pushAndPopUntil(
+          const BookOverviewRoute(),
+          predicate: any(named: 'predicate'),
+        ),
+      ).called(1);
     });
 
     testWidgets('display error message when error occurs', (tester) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => updateBookUseCase.updateBook(book))
-          .thenAnswer((_) async => UpdateBookResponse.error('mocked error'));
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => updateBookUseCase.updateBook(book),
+      ).thenAnswer((_) async => UpdateBookResponse.error('mocked error'));
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -156,13 +174,16 @@ void main() {
       expect(find.text('mocked error'), findsOneWidget);
     });
 
-    testWidgets('display not found message when book is not found',
-        (tester) async {
+    testWidgets('display not found message when book is not found', (
+      tester,
+    ) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => updateBookUseCase.updateBook(book))
-          .thenAnswer((_) async => UpdateBookResponse.notFound());
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => updateBookUseCase.updateBook(book),
+      ).thenAnswer((_) async => UpdateBookResponse.notFound());
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -177,13 +198,15 @@ void main() {
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => updateBookUseCase.updateBook(book))
-          .thenAnswer((_) async => UpdateBookResponse.unauthorized());
-      when(() =>
-              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
-          .thenAnswer((_) async => null);
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => updateBookUseCase.updateBook(book),
+      ).thenAnswer((_) async => UpdateBookResponse.unauthorized());
+      when(
+        () => router.pushAndPopUntil(any(), predicate: any(named: 'predicate')),
+      ).thenAnswer((_) async => null);
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -192,22 +215,29 @@ void main() {
       // update book
       await tester.tap(find.text('Save Changes'));
 
-      verify(() =>
-              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
-          .called(1);
+      verify(
+        () => router.pushAndPopUntil(any(), predicate: any(named: 'predicate')),
+      ).called(1);
     });
   });
 
   group('delete book', () {
-    testWidgets('navigate back to overview page when delete succeeds',
-        (tester) async {
+    testWidgets('navigate back to overview page when delete succeeds', (
+      tester,
+    ) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => deleteBookUseCase.deleteBook(bookId))
-          .thenAnswer((_) async => DeleteBookResponse.success());
-      when(() => router.pushAndPopUntil(const BookOverviewRoute(),
-          predicate: any(named: 'predicate'))).thenAnswer((_) async => null);
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => deleteBookUseCase.deleteBook(bookId),
+      ).thenAnswer((_) async => DeleteBookResponse.success());
+      when(
+        () => router.pushAndPopUntil(
+          const BookOverviewRoute(),
+          predicate: any(named: 'predicate'),
+        ),
+      ).thenAnswer((_) async => null);
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -218,17 +248,24 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Delete'));
 
-      verify(() => router.pushAndPopUntil(const BookOverviewRoute(),
-          predicate: any(named: 'predicate'))).called(1);
+      verify(
+        () => router.pushAndPopUntil(
+          const BookOverviewRoute(),
+          predicate: any(named: 'predicate'),
+        ),
+      ).called(1);
     });
 
-    testWidgets('display not found message when book is not found',
-        (tester) async {
+    testWidgets('display not found message when book is not found', (
+      tester,
+    ) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => deleteBookUseCase.deleteBook(bookId))
-          .thenAnswer((_) async => DeleteBookResponse.notFound());
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => deleteBookUseCase.deleteBook(bookId),
+      ).thenAnswer((_) async => DeleteBookResponse.notFound());
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -245,10 +282,12 @@ void main() {
 
     testWidgets('display error message when an error occurs', (tester) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => deleteBookUseCase.deleteBook(bookId))
-          .thenAnswer((_) async => DeleteBookResponse.error('mocked error'));
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => deleteBookUseCase.deleteBook(bookId),
+      ).thenAnswer((_) async => DeleteBookResponse.error('mocked error'));
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -265,13 +304,15 @@ void main() {
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
       final book = Book(id: bookId, title: 'testTitle', author: 'testAuthor');
-      when(() => getBookUseCase.getBook(bookId))
-          .thenAnswer((_) async => GetBookResponse.success(book));
-      when(() => deleteBookUseCase.deleteBook(bookId))
-          .thenAnswer((_) async => DeleteBookResponse.unauthorized());
-      when(() =>
-              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
-          .thenAnswer((_) async => null);
+      when(
+        () => getBookUseCase.getBook(bookId),
+      ).thenAnswer((_) async => GetBookResponse.success(book));
+      when(
+        () => deleteBookUseCase.deleteBook(bookId),
+      ).thenAnswer((_) async => DeleteBookResponse.unauthorized());
+      when(
+        () => router.pushAndPopUntil(any(), predicate: any(named: 'predicate')),
+      ).thenAnswer((_) async => null);
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -282,9 +323,9 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Delete'));
 
-      verify(() =>
-              router.pushAndPopUntil(any(), predicate: any(named: 'predicate')))
-          .called(1);
+      verify(
+        () => router.pushAndPopUntil(any(), predicate: any(named: 'predicate')),
+      ).called(1);
     });
   });
 }

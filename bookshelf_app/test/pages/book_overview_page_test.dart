@@ -66,8 +66,9 @@ void main() {
         Book(id: '1', title: 'test 1', author: 'test'),
         Book(id: '2', title: 'test 2', author: 'test'),
       ];
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.success(books));
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.success(books));
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -78,8 +79,9 @@ void main() {
     });
 
     testWidgets('display message when empty list is fetched', (tester) async {
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.success([]));
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.success([]));
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -90,8 +92,9 @@ void main() {
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
       when(() => router.replace(any())).thenAnswer((_) async => null);
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.unauthorized());
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.unauthorized());
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -100,8 +103,9 @@ void main() {
     });
 
     testWidgets('display error when fetch fails', (tester) async {
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.error('mocked error'));
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.error('mocked error'));
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -110,14 +114,16 @@ void main() {
       expect(find.text('mocked error'), findsOneWidget);
     });
 
-    testWidgets('navigate to details page when book is clicked',
-        (tester) async {
+    testWidgets('navigate to details page when book is clicked', (
+      tester,
+    ) async {
       final books = [
         Book(id: '1', title: 'test 1', author: 'test'),
         Book(id: '2', title: 'test 2', author: 'test'),
       ];
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.success(books));
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.success(books));
       when(() => router.push(any())).thenAnswer((_) async => null);
 
       // load page
@@ -132,15 +138,24 @@ void main() {
   });
 
   group('add book', () {
-    testWidgets('new book is displayed after added successfully',
-        (tester) async {
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.success([]));
-      when(() => addBookUseCase.addBook(
-              title: 'test 1', author: 'test', genre: 'genre', rating: 3))
-          .thenAnswer((_) async => AddBookResponse.success(
-                Book(id: '1', title: 'test 1', author: 'test'),
-              ));
+    testWidgets('new book is displayed after added successfully', (
+      tester,
+    ) async {
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.success([]));
+      when(
+        () => addBookUseCase.addBook(
+          title: 'test 1',
+          author: 'test',
+          genre: 'genre',
+          rating: 3,
+        ),
+      ).thenAnswer(
+        (_) async => AddBookResponse.success(
+          Book(id: '1', title: 'test 1', author: 'test'),
+        ),
+      );
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -162,13 +177,17 @@ void main() {
 
     testWidgets('navigate to login page when unauthorized', (tester) async {
       when(() => router.replace(any())).thenAnswer((_) async => null);
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.success([]));
-      when(() => addBookUseCase.addBook(
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.success([]));
+      when(
+        () => addBookUseCase.addBook(
           title: 'test 1',
           author: 'test',
           genre: 'genre',
-          rating: 3)).thenAnswer((_) async => AddBookResponse.unauthorized());
+          rating: 3,
+        ),
+      ).thenAnswer((_) async => AddBookResponse.unauthorized());
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -186,15 +205,20 @@ void main() {
       verify(() => router.replace(any())).called(1);
     });
 
-    testWidgets('display conflict message when add book results in conflict',
-        (tester) async {
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.success([]));
-      when(() => addBookUseCase.addBook(
+    testWidgets('display conflict message when add book results in conflict', (
+      tester,
+    ) async {
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.success([]));
+      when(
+        () => addBookUseCase.addBook(
           title: 'test 1',
           author: 'test',
           genre: 'genre',
-          rating: 3)).thenAnswer((_) async => AddBookResponse.conflict());
+          rating: 3,
+        ),
+      ).thenAnswer((_) async => AddBookResponse.conflict());
 
       // load page
       await tester.pumpWidget(testSubject);
@@ -212,13 +236,20 @@ void main() {
       expect(find.text('This Book already exists'), findsOneWidget);
     });
 
-    testWidgets('display error message when add book results in error',
-        (tester) async {
-      when(() => getBooksUseCase.getBooks())
-          .thenAnswer((_) async => GetBooksResponse.success([]));
-      when(() => addBookUseCase.addBook(
-              title: 'test 1', author: 'test', genre: 'genre', rating: 3))
-          .thenAnswer((_) async => AddBookResponse.error('Mocked error'));
+    testWidgets('display error message when add book results in error', (
+      tester,
+    ) async {
+      when(
+        () => getBooksUseCase.getBooks(),
+      ).thenAnswer((_) async => GetBooksResponse.success([]));
+      when(
+        () => addBookUseCase.addBook(
+          title: 'test 1',
+          author: 'test',
+          genre: 'genre',
+          rating: 3,
+        ),
+      ).thenAnswer((_) async => AddBookResponse.error('Mocked error'));
 
       // load page
       await tester.pumpWidget(testSubject);

@@ -21,16 +21,18 @@ void main() {
   });
 
   test(
-      'returns GetBooksResponse.success when token is set and request succeeds',
-      () async {
-    when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.getBooks('token', null))
-        .thenAnswer((_) => Future.value(GetBooksResponse.success([])));
+    'returns GetBooksResponse.success when token is set and request succeeds',
+    () async {
+      when(() => storage.token).thenAnswer((_) => Future.value('token'));
+      when(
+        () => bookService.getBooks('token', null),
+      ).thenAnswer((_) => Future.value(GetBooksResponse.success([])));
 
-    final result = await useCase.getBooks();
+      final result = await useCase.getBooks();
 
-    expect(result.runtimeType, GetBooksResponse.success([]).runtimeType);
-  });
+      expect(result.runtimeType, GetBooksResponse.success([]).runtimeType);
+    },
+  );
 
   test('returns unauthorized when a token is not set', () async {
     when(() => storage.token).thenAnswer((_) => Future.value(null));

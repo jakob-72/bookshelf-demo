@@ -16,67 +16,63 @@ class BookOverviewPage extends StatelessWidget {
   const BookOverviewPage({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      StateNotifierProvider<BookOverviewPageModel, BooksOverviewPageState>(
-        create: (_) => BookOverviewPageModel(),
-        builder: (context, _) {
-          final state = context.watch<BooksOverviewPageState>();
-          return Scaffold(
-              appBar: AppBar(
-                title: const Text('My Books', style: headline1),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.refresh),
-                    tooltip: 'Refresh',
-                    onPressed: () =>
-                        context.read<BookOverviewPageModel>().refresh(),
-                  ),
-                  IconButton(
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (_) => SearchDialog(
-                        model: context.read<BookOverviewPageModel>(),
-                      ),
-                    ),
-                    tooltip: 'Search',
-                    icon: const Icon(Icons.search),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.logout),
-                    tooltip: 'Logout',
-                    onPressed: () =>
-                        context.read<BookOverviewPageModel>().logout(),
-                  ),
-                ],
+  Widget build(
+    BuildContext context,
+  ) => StateNotifierProvider<BookOverviewPageModel, BooksOverviewPageState>(
+    create: (_) => BookOverviewPageModel(),
+    builder: (context, _) {
+      final state = context.watch<BooksOverviewPageState>();
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('My Books', style: headline1),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              tooltip: 'Refresh',
+              onPressed: () => context.read<BookOverviewPageModel>().refresh(),
+            ),
+            IconButton(
+              onPressed: () => showDialog(
+                context: context,
+                builder: (_) =>
+                    SearchDialog(model: context.read<BookOverviewPageModel>()),
               ),
-              body: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: 800,
-                    ),
-                    child: BookOverviewBody(state: state),
-                  ),
-                ),
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: () {
-                  if (state is Loading) {
-                    return;
-                  }
-                  showDialog(
-                    context: context,
-                    builder: (_) => AddBookDialog(
-                      model: context.read<BookOverviewPageModel>(),
-                    ),
-                  );
-                },
-                tooltip: 'Add a book',
-                child: const Icon(Icons.add),
-              ));
-        },
+              tooltip: 'Search',
+              icon: const Icon(Icons.search),
+            ),
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: 'Logout',
+              onPressed: () => context.read<BookOverviewPageModel>().logout(),
+            ),
+          ],
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: BookOverviewBody(state: state),
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (state is Loading) {
+              return;
+            }
+            showDialog(
+              context: context,
+              builder: (_) =>
+                  AddBookDialog(model: context.read<BookOverviewPageModel>()),
+            );
+          },
+          tooltip: 'Add a book',
+          child: const Icon(Icons.add),
+        ),
       );
+    },
+  );
 }
 
 class BookOverviewBody extends StatelessWidget {
@@ -86,43 +82,38 @@ class BookOverviewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Builder(
-        builder: (context) {
-          final model = context.read<BookOverviewPageModel>();
-          final books = state.books;
+    builder: (context) {
+      final model = context.read<BookOverviewPageModel>();
+      final books = state.books;
 
-          if (state is Loading) {
-            return const CircularProgressIndicator();
-          }
-          if (state is Error) {
-            context.showSnackbar((state as Error).message);
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('An error occurred'),
-                const Gap(16),
-                ElevatedButton(
-                  onPressed: () => model.refresh(),
-                  style: primaryButton,
-                  child: const Text('Retry'),
-                ),
-              ],
-            );
-          }
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _SearchLabel(
-                  searchTerm: (state as Idle).searchTerm, model: model),
-              if ((state as Idle).searchTerm != null) const Gap(16),
-              Expanded(
-                child: BookList(
-                  books: books,
-                ),
-              ),
-            ],
-          );
-        },
+      if (state is Loading) {
+        return const CircularProgressIndicator();
+      }
+      if (state is Error) {
+        context.showSnackbar((state as Error).message);
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('An error occurred'),
+            const Gap(16),
+            ElevatedButton(
+              onPressed: () => model.refresh(),
+              style: primaryButton,
+              child: const Text('Retry'),
+            ),
+          ],
+        );
+      }
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _SearchLabel(searchTerm: (state as Idle).searchTerm, model: model),
+          if ((state as Idle).searchTerm != null) const Gap(16),
+          Expanded(child: BookList(books: books)),
+        ],
       );
+    },
+  );
 }
 
 class _SearchLabel extends StatelessWidget {

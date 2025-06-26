@@ -19,9 +19,7 @@ class BookService {
     try {
       final response = await dio.get(
         path,
-        options: Options(
-          headers: {'Authorization': 'Bearer $token'},
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       return response.statusCode == 200;
     } on DioException catch (e) {
@@ -164,8 +162,9 @@ class BookService {
         ),
       );
       if (response.statusCode == 200) {
-        final updatedBook =
-            Book.fromJson(response.data as Map<String, dynamic>);
+        final updatedBook = Book.fromJson(
+          response.data as Map<String, dynamic>,
+        );
         return UpdateBookResponse.success(updatedBook);
       } else if (response.statusCode == 401) {
         return UpdateBookResponse.unauthorized();

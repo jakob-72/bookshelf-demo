@@ -21,8 +21,9 @@ void main() {
   });
 
   test('returns AuthResponse.success when login succeeds', () async {
-    when(() => authService.login('username', 'password'))
-        .thenAnswer((_) async => AuthResponse.success('token'));
+    when(
+      () => authService.login('username', 'password'),
+    ).thenAnswer((_) async => AuthResponse.success('token'));
     when(() => storage.setToken('token')).thenAnswer((_) async {});
 
     final result = await useCase.login('username', 'password');
@@ -31,15 +32,18 @@ void main() {
     verify(() => storage.setToken('token')).called(1);
   });
 
-  test('returns AuthResponse.unauthorized and dont save token when login fails',
-      () async {
-    when(() => authService.login('username', 'password'))
-        .thenAnswer((_) async => AuthResponse.unauthorized());
-    when(() => storage.setToken('token')).thenAnswer((_) async {});
+  test(
+    'returns AuthResponse.unauthorized and dont save token when login fails',
+    () async {
+      when(
+        () => authService.login('username', 'password'),
+      ).thenAnswer((_) async => AuthResponse.unauthorized());
+      when(() => storage.setToken('token')).thenAnswer((_) async {});
 
-    final result = await useCase.login('username', 'password');
+      final result = await useCase.login('username', 'password');
 
-    expect(result.runtimeType, AuthResponse.unauthorized().runtimeType);
-    verifyNever(() => storage.setToken('token'));
-  });
+      expect(result.runtimeType, AuthResponse.unauthorized().runtimeType);
+      verifyNever(() => storage.setToken('token'));
+    },
+  );
 }

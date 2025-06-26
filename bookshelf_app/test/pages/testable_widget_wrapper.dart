@@ -14,12 +14,9 @@ class TestableWidgetWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MediaQuery(
-        data: const MediaQueryData(),
-        child: MaterialApp(
-          home: MultiProvider(
-            providers: providers,
-            child: testSubject,
-          ),
-        ),
-      );
+    data: const MediaQueryData(),
+    child: MaterialApp(
+      home: MultiProvider(providers: providers, child: testSubject),
+    ),
+  );
 }

@@ -21,27 +21,24 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Builder(
-        builder: (_) {
-          if (unauthorized) {
-            context.showSnackbar('Please login to continue');
-          }
-          return const Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Login', style: headline1),
-                  Gap(16),
-                  Padding(
-                    padding: EdgeInsets.all(8),
-                    child: LoginForm(),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+    builder: (_) {
+      if (unauthorized) {
+        context.showSnackbar('Please login to continue');
+      }
+      return const Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Login', style: headline1),
+              Gap(16),
+              Padding(padding: EdgeInsets.all(8), child: LoginForm()),
+            ],
+          ),
+        ),
       );
+    },
+  );
 }
 
 class LoginForm extends StatefulWidget {
@@ -74,10 +71,7 @@ class _LoginFormState extends State<LoginForm> {
           }
 
           return ConstrainedBox(
-            constraints: const BoxConstraints(
-              minWidth: 400,
-              maxWidth: 640,
-            ),
+            constraints: const BoxConstraints(minWidth: 400, maxWidth: 640),
             child: Form(
               key: _formKey,
               child: Column(
@@ -147,20 +141,14 @@ class _LoginFormState extends State<LoginForm> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    model.login(
-      _usernameController.text,
-      _passwordController.text,
-    );
+    model.login(_usernameController.text, _passwordController.text);
   }
 
   void _register(LoginPageModel model) {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    model.register(
-      _usernameController.text,
-      _passwordController.text,
-    );
+    model.register(_usernameController.text, _passwordController.text);
   }
 
   @override

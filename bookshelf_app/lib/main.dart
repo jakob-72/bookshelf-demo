@@ -48,12 +48,14 @@ void main() {
   final authService = AuthService(Client.get(authBaseUrl));
   final bookService = BookService(Client.get(bookServiceBaseUrl));
 
-  runApp(App(
-    router: router,
-    storage: storage,
-    authService: authService,
-    bookService: bookService,
-  ));
+  runApp(
+    App(
+      router: router,
+      storage: storage,
+      authService: authService,
+      bookService: bookService,
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -72,48 +74,44 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MultiProvider(
-        providers: [
-          ListenableProvider<AppRouter>.value(value: router),
-          Provider<LoginUseCase>.value(
-            value: LoginUseCase(authService: authService, storage: storage),
+    providers: [
+      ListenableProvider<AppRouter>.value(value: router),
+      Provider<LoginUseCase>.value(
+        value: LoginUseCase(authService: authService, storage: storage),
+      ),
+      Provider<RegisterUseCase>.value(
+        value: RegisterUseCase(authService: authService),
+      ),
+      Provider<GetBooksUseCase>.value(
+        value: GetBooksUseCase(storage: storage, bookService: bookService),
+      ),
+      Provider<GetBookUseCase>.value(
+        value: GetBookUseCase(storage: storage, bookService: bookService),
+      ),
+      Provider<AddBookUseCase>.value(
+        value: AddBookUseCase(storage: storage, bookService: bookService),
+      ),
+      Provider<DeleteBookUseCase>.value(
+        value: DeleteBookUseCase(storage: storage, bookService: bookService),
+      ),
+      Provider<LogoutUseCase>.value(value: LogoutUseCase(storage: storage)),
+      Provider<UpdateBookUseCase>.value(
+        value: UpdateBookUseCase(storage: storage, bookService: bookService),
+      ),
+      Provider<StartPageModel>.value(
+        value: StartPageModel(
+          router: router,
+          useCase: CheckTokenUseCase(
+            storage: storage,
+            bookService: bookService,
           ),
-          Provider<RegisterUseCase>.value(
-            value: RegisterUseCase(authService: authService),
-          ),
-          Provider<GetBooksUseCase>.value(
-            value: GetBooksUseCase(storage: storage, bookService: bookService),
-          ),
-          Provider<GetBookUseCase>.value(
-            value: GetBookUseCase(storage: storage, bookService: bookService),
-          ),
-          Provider<AddBookUseCase>.value(
-            value: AddBookUseCase(storage: storage, bookService: bookService),
-          ),
-          Provider<DeleteBookUseCase>.value(
-            value:
-                DeleteBookUseCase(storage: storage, bookService: bookService),
-          ),
-          Provider<LogoutUseCase>.value(value: LogoutUseCase(storage: storage)),
-          Provider<UpdateBookUseCase>.value(
-            value:
-                UpdateBookUseCase(storage: storage, bookService: bookService),
-          ),
-          Provider<StartPageModel>.value(
-            value: StartPageModel(
-              router: router,
-              useCase: CheckTokenUseCase(
-                storage: storage,
-                bookService: bookService,
-              ),
-            ),
-          ),
-        ],
-        child: MaterialApp.router(
-          title: 'Bookshelf',
-          theme: ThemeData(
-            useMaterial3: true,
-          ),
-          routerConfig: router.config(),
         ),
-      );
+      ),
+    ],
+    child: MaterialApp.router(
+      title: 'Bookshelf',
+      theme: ThemeData(useMaterial3: true),
+      routerConfig: router.config(),
+    ),
+  );
 }

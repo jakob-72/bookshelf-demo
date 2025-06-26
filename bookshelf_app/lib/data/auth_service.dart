@@ -14,10 +14,7 @@ class AuthService {
     try {
       response = await dio.post(
         '/login',
-        data: {
-          'username': username,
-          'password': password,
-        },
+        data: {'username': username, 'password': password},
         options: Options(validateStatus: (_) => true),
       );
       if (response.statusCode == 200) {
@@ -37,7 +34,8 @@ class AuthService {
     } catch (e) {
       Logger.logError(e, operation: operation);
       return AuthResponse.error(
-          'Error parsing response: $e, data: ${response?.data}');
+        'Error parsing response: $e, data: ${response?.data}',
+      );
     }
   }
 
@@ -46,10 +44,7 @@ class AuthService {
     try {
       final response = await dio.post(
         '/register',
-        data: {
-          'username': username,
-          'password': password,
-        },
+        data: {'username': username, 'password': password},
         options: Options(validateStatus: (_) => true),
       );
       if (response.statusCode == 201) {
@@ -62,7 +57,8 @@ class AuthService {
           operation: operation,
         );
         return RegisterResponse.error(
-            '${response.statusCode}: ${response.data}');
+          '${response.statusCode}: ${response.data}',
+        );
       }
     } on DioException catch (e) {
       Logger.logError(e, operation: operation);

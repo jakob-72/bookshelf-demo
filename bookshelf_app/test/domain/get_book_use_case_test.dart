@@ -21,18 +21,21 @@ void main() {
     useCase = GetBookUseCase(storage: storage, bookService: bookService);
   });
 
-  test('returns GetBookResponse.success when token is set and request succeeds',
-      () async {
-    final book = Book(id: 'id', title: 'title', author: 'author');
-    when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.getBook('token', 'bookId'))
-        .thenAnswer((_) => Future.value(GetBookResponse.success(book)));
+  test(
+    'returns GetBookResponse.success when token is set and request succeeds',
+    () async {
+      final book = Book(id: 'id', title: 'title', author: 'author');
+      when(() => storage.token).thenAnswer((_) => Future.value('token'));
+      when(
+        () => bookService.getBook('token', 'bookId'),
+      ).thenAnswer((_) => Future.value(GetBookResponse.success(book)));
 
-    final result = await useCase.getBook('bookId');
+      final result = await useCase.getBook('bookId');
 
-    expect(result.runtimeType, GetBookResponse.success(book).runtimeType);
-    expect((result as Success).book, book);
-  });
+      expect(result.runtimeType, GetBookResponse.success(book).runtimeType);
+      expect((result as Success).book, book);
+    },
+  );
 
   test('returns unauthorized when a token is not set', () async {
     when(() => storage.token).thenAnswer((_) => Future.value(null));

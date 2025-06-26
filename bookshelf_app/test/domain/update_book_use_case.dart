@@ -22,24 +22,27 @@ void main() {
   });
 
   test(
-      'returns UpdateBookResponse.success when token is set and request succeeds',
-      () async {
-    final book = Book(id: 'id', title: 'title', author: 'author');
-    when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.updateBook('token', book))
-        .thenAnswer((_) => Future.value(UpdateBookResponse.success(book)));
+    'returns UpdateBookResponse.success when token is set and request succeeds',
+    () async {
+      final book = Book(id: 'id', title: 'title', author: 'author');
+      when(() => storage.token).thenAnswer((_) => Future.value('token'));
+      when(
+        () => bookService.updateBook('token', book),
+      ).thenAnswer((_) => Future.value(UpdateBookResponse.success(book)));
 
-    final result = await useCase.updateBook(book);
+      final result = await useCase.updateBook(book);
 
-    expect(result.runtimeType, UpdateBookResponse.success(book).runtimeType);
-    expect((result as Success).book, book);
-  });
+      expect(result.runtimeType, UpdateBookResponse.success(book).runtimeType);
+      expect((result as Success).book, book);
+    },
+  );
 
   test('returns unauthorized when a token is not set', () async {
     when(() => storage.token).thenAnswer((_) => Future.value(null));
 
-    final result = await useCase
-        .updateBook(Book(id: 'id', title: 'title', author: 'author'));
+    final result = await useCase.updateBook(
+      Book(id: 'id', title: 'title', author: 'author'),
+    );
 
     expect(result.runtimeType, UpdateBookResponse.unauthorized().runtimeType);
   });

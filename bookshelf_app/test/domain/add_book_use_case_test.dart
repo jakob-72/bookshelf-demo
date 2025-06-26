@@ -22,25 +22,30 @@ void main() {
     useCase = AddBookUseCase(bookService: bookService, storage: storage);
   });
 
-  test('return AddBookResponse.success when token is set and request succeeds',
-      () async {
-    const title = 'title';
-    const author = 'author';
-    when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.addBook(
+  test(
+    'return AddBookResponse.success when token is set and request succeeds',
+    () async {
+      const title = 'title';
+      const author = 'author';
+      when(() => storage.token).thenAnswer((_) => Future.value('token'));
+      when(
+        () => bookService.addBook(
           'token',
           AddBookRequest(title: title, author: author, read: false),
-        )).thenAnswer((_) => Future.value(Success(
-          Book(id: 'id', title: title, author: author),
-        )));
+        ),
+      ).thenAnswer(
+        (_) =>
+            Future.value(Success(Book(id: 'id', title: title, author: author))),
+      );
 
-    final response = await useCase.addBook(title: title, author: author);
+      final response = await useCase.addBook(title: title, author: author);
 
-    expect(response.runtimeType, Success);
-    expect((response as Success).book.id, 'id');
-    expect(response.book.title, title);
-    expect(response.book.author, author);
-  });
+      expect(response.runtimeType, Success);
+      expect((response as Success).book.id, 'id');
+      expect(response.book.title, title);
+      expect(response.book.author, author);
+    },
+  );
 
   test('returns AddBookResponse.unauthorized when token is null', () async {
     when(() => storage.token).thenAnswer((_) => Future.value(null));

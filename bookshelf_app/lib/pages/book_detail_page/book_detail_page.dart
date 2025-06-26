@@ -26,9 +26,9 @@ class BookDetailPage extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
               onPressed: () => context.read<AppRouter>().pushAndPopUntil(
-                    const BookOverviewRoute(),
-                    predicate: (_) => true,
-                  ),
+                const BookOverviewRoute(),
+                predicate: (_) => true,
+              ),
             ),
           ),
           body: Center(
@@ -96,8 +96,9 @@ class _BookDetailFormState extends State<BookDetailForm> {
     _titleController = TextEditingController(text: widget.book.title);
     _authorController = TextEditingController(text: widget.book.author);
     _genreController = TextEditingController(text: widget.book.genre);
-    _ratingController =
-        TextEditingController(text: widget.book.rating?.toString());
+    _ratingController = TextEditingController(
+      text: widget.book.rating?.toString(),
+    );
     _read = widget.book.read;
   }
 
@@ -112,84 +113,83 @@ class _BookDetailFormState extends State<BookDetailForm> {
 
   @override
   Widget build(BuildContext context) => Form(
-        key: _formKey,
-        child: Column(
+    key: _formKey,
+    child: Column(
+      children: [
+        TextFormField(
+          controller: _titleController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter the title';
+            }
+            return null;
+          },
+          decoration: inputDecoration('Title'),
+        ),
+        TextFormField(
+          controller: _authorController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter the author';
+            }
+            return null;
+          },
+          decoration: inputDecoration('Author'),
+        ),
+        TextFormField(
+          controller: _genreController,
+          decoration: inputDecoration('Genre'),
+        ),
+        TextFormField(
+          controller: _ratingController,
+          decoration: inputDecoration('Rating'),
+          validator: (value) {
+            if ((value != null && int.tryParse(value) != null) &&
+                (int.tryParse(value)! < 0 || int.tryParse(value)! > 5)) {
+              return 'Please enter a valid number between 0 and 5';
+            }
+            return null;
+          },
+          keyboardType: TextInputType.number,
+        ),
+        SwitchListTile(
+          title: const Text('Read'),
+          value: _read,
+          onChanged: (bool value) => setState(() => _read = value),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextFormField(
-              controller: _titleController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the title';
+            ElevatedButton(
+              onPressed: () {
+                if (!_formKey.currentState!.validate()) {
+                  return;
                 }
-                return null;
+                final newBook = Book(
+                  id: widget.book.id,
+                  title: _titleController.text,
+                  author: _authorController.text,
+                  genre: _genreController.text,
+                  rating: int.tryParse(_ratingController.text),
+                  read: _read,
+                );
+                model.saveBook(newBook);
               },
-              decoration: inputDecoration('Title'),
+              style: primaryButton,
+              child: const Text('Save Changes'),
             ),
-            TextFormField(
-              controller: _authorController,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter the author';
-                }
-                return null;
-              },
-              decoration: inputDecoration('Author'),
-            ),
-            TextFormField(
-              controller: _genreController,
-              decoration: inputDecoration('Genre'),
-            ),
-            TextFormField(
-              controller: _ratingController,
-              decoration: inputDecoration('Rating'),
-              validator: (value) {
-                if ((value != null && int.tryParse(value) != null) &&
-                    (int.tryParse(value)! < 0 || int.tryParse(value)! > 5)) {
-                  return 'Please enter a valid number between 0 and 5';
-                }
-                return null;
-              },
-              keyboardType: TextInputType.number,
-            ),
-            SwitchListTile(
-              title: const Text('Read'),
-              value: _read,
-              onChanged: (bool value) => setState(() => _read = value),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    if (!_formKey.currentState!.validate()) {
-                      return;
-                    }
-                    final newBook = Book(
-                      id: widget.book.id,
-                      title: _titleController.text,
-                      author: _authorController.text,
-                      genre: _genreController.text,
-                      rating: int.tryParse(_ratingController.text),
-                      read: _read,
-                    );
-                    model.saveBook(newBook);
-                  },
-                  style: primaryButton,
-                  child: const Text('Save Changes'),
-                ),
-                ElevatedButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => DeleteBookDialog(
-                      onConfirm: () => model.deleteBook(),
-                    ),
-                  ),
-                  style: deleteButton,
-                  child: const Text('Delete Book'),
-                ),
-              ],
+            ElevatedButton(
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) =>
+                    DeleteBookDialog(onConfirm: () => model.deleteBook()),
+              ),
+              style: deleteButton,
+              child: const Text('Delete Book'),
             ),
           ],
         ),
-      );
+      ],
+    ),
+  );
 }

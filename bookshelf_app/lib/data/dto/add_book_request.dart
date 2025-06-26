@@ -14,12 +14,12 @@ class AddBookRequest {
   });
 
   Map<String, dynamic> toJson() => {
-        'title': title,
-        'author': author,
-        'genre': genre,
-        'rating': rating,
-        'read': read,
-      };
+    'title': title,
+    'author': author,
+    'genre': genre,
+    'rating': rating,
+    'read': read,
+  };
 
   @override
   bool operator ==(Object other) =>

@@ -21,8 +21,9 @@ void main() {
 
   test('returns true when a token is set and is valid', () async {
     when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.checkToken('token'))
-        .thenAnswer((_) => Future.value(true));
+    when(
+      () => bookService.checkToken('token'),
+    ).thenAnswer((_) => Future.value(true));
 
     final result = await useCase.hasValidToken();
 
@@ -31,8 +32,9 @@ void main() {
 
   test('returns false when a token is set and is invalid', () async {
     when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.checkToken('token'))
-        .thenAnswer((_) => Future.value(false));
+    when(
+      () => bookService.checkToken('token'),
+    ).thenAnswer((_) => Future.value(false));
 
     final result = await useCase.hasValidToken();
 

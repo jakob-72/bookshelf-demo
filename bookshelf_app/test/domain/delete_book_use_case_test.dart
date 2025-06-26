@@ -21,16 +21,18 @@ void main() {
   });
 
   test(
-      'returns DeleteBookResponse.success when token is set and request succeeds',
-      () async {
-    when(() => storage.token).thenAnswer((_) => Future.value('token'));
-    when(() => bookService.deleteBook('token', 'bookId'))
-        .thenAnswer((_) => Future.value(DeleteBookResponse.success()));
+    'returns DeleteBookResponse.success when token is set and request succeeds',
+    () async {
+      when(() => storage.token).thenAnswer((_) => Future.value('token'));
+      when(
+        () => bookService.deleteBook('token', 'bookId'),
+      ).thenAnswer((_) => Future.value(DeleteBookResponse.success()));
 
-    final result = await useCase.deleteBook('bookId');
+      final result = await useCase.deleteBook('bookId');
 
-    expect(result.runtimeType, DeleteBookResponse.success().runtimeType);
-  });
+      expect(result.runtimeType, DeleteBookResponse.success().runtimeType);
+    },
+  );
 
   test('returns unauthorized when a token is not set', () async {
     when(() => storage.token).thenAnswer((_) => Future.value(null));

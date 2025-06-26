@@ -30,101 +30,98 @@ class _AddBookDialogState extends State<AddBookDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text(
-          'Add New Book',
-          style: headline2,
-        ),
-        content: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+    title: const Text('Add New Book', style: headline2),
+    content: Form(
+      key: _formKey,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextFormField(
+            key: AddBookDialog.titleKey,
+            controller: _titleController,
+            decoration: inputDecoration('Title', required: true),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter the title';
+              }
+              return null;
+            },
+          ),
+          const Gap(16),
+          TextFormField(
+            key: AddBookDialog.authorKey,
+            controller: _authorController,
+            decoration: inputDecoration('Author', required: true),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter the author';
+              }
+              return null;
+            },
+          ),
+          const Gap(16),
+          TextFormField(
+            key: AddBookDialog.genreKey,
+            controller: _genreController,
+            decoration: inputDecoration('Genre'),
+          ),
+          const Gap(16),
+          TextFormField(
+            key: AddBookDialog.ratingKey,
+            controller: _ratingController,
+            decoration: inputDecoration('Rating'),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return null;
+              }
+              final rating = int.tryParse(value);
+              if (rating == null || rating < 0 || rating > 5) {
+                return 'Please enter a valid rating between 0 and 5';
+              }
+              return null;
+            },
+          ),
+          const Gap(16),
+          Row(
             children: [
-              TextFormField(
-                key: AddBookDialog.titleKey,
-                controller: _titleController,
-                decoration: inputDecoration('Title', required: true),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the title';
-                  }
-                  return null;
-                },
-              ),
-              const Gap(16),
-              TextFormField(
-                key: AddBookDialog.authorKey,
-                controller: _authorController,
-                decoration: inputDecoration('Author', required: true),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the author';
-                  }
-                  return null;
-                },
-              ),
-              const Gap(16),
-              TextFormField(
-                key: AddBookDialog.genreKey,
-                controller: _genreController,
-                decoration: inputDecoration('Genre'),
-              ),
-              const Gap(16),
-              TextFormField(
-                key: AddBookDialog.ratingKey,
-                controller: _ratingController,
-                decoration: inputDecoration('Rating'),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return null;
-                  }
-                  final rating = int.tryParse(value);
-                  if (rating == null || rating < 0 || rating > 5) {
-                    return 'Please enter a valid rating between 0 and 5';
-                  }
-                  return null;
-                },
-              ),
-              const Gap(16),
-              Row(
-                children: [
-                  const Text('Read', style: TextStyle(color: Colors.grey)),
-                  Checkbox(
-                    value: _read,
-                    onChanged: (bool? value) =>
-                        setState(() => _read = value ?? false),
-                  ),
-                ],
+              const Text('Read', style: TextStyle(color: Colors.grey)),
+              Checkbox(
+                value: _read,
+                onChanged: (bool? value) =>
+                    setState(() => _read = value ?? false),
               ),
             ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => widget.model.pop(),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            key: AddBookDialog.submitKey,
-            onPressed: () {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              widget.model.addBook(
-                title: _titleController.text,
-                author: _authorController.text,
-                genre: _genreController.text,
-                rating: int.tryParse(_ratingController.text),
-                read: _read,
-              );
-              widget.model.pop();
-            },
-            style: primaryButton,
-            child: const Text('Submit'),
-          ),
         ],
-      );
+      ),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => widget.model.pop(),
+        child: const Text('Cancel'),
+      ),
+      ElevatedButton(
+        key: AddBookDialog.submitKey,
+        onPressed: () {
+          if (!_formKey.currentState!.validate()) {
+            return;
+          }
+          widget.model.addBook(
+            title: _titleController.text,
+            author: _authorController.text,
+            genre: _genreController.text,
+            rating: int.tryParse(_ratingController.text),
+            read: _read,
+          );
+          widget.model.pop();
+        },
+        style: primaryButton,
+        child: const Text('Submit'),
+      ),
+    ],
+  );
 
   @override
   void dispose() {

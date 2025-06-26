@@ -16,22 +16,22 @@ class Book {
   });
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'author': author,
-        'genre': genre,
-        'rating': rating,
-        'read': read,
-      };
+    'id': id,
+    'title': title,
+    'author': author,
+    'genre': genre,
+    'rating': rating,
+    'read': read,
+  };
 
   factory Book.fromJson(Map<String, dynamic> json) => Book(
-        id: json['id'],
-        title: json['title'],
-        author: json['author'],
-        genre: json['genre'],
-        rating: json['rating'],
-        read: json['read'] ?? false,
-      );
+    id: json['id'],
+    title: json['title'],
+    author: json['author'],
+    genre: json['genre'],
+    rating: json['rating'],
+    read: json['read'] ?? false,
+  );
 
   @override
   bool operator ==(Object other) =>

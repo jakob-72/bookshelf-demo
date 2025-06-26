@@ -1,29 +1,14 @@
 import 'package:flutter/material.dart';
 
-const headline1 = TextStyle(
-  fontSize: 24,
-  fontWeight: FontWeight.bold,
-);
+const headline1 = TextStyle(fontSize: 24, fontWeight: FontWeight.bold);
 
-const headline2 = TextStyle(
-  fontSize: 20,
-  fontWeight: FontWeight.bold,
-);
+const headline2 = TextStyle(fontSize: 20, fontWeight: FontWeight.bold);
 
-const headline3 = TextStyle(
-  fontSize: 18,
-  fontWeight: FontWeight.bold,
-);
+const headline3 = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
 
-final subtitle1 = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.w500,
-);
+final subtitle1 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
 
-final subtitle2 = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w400,
-);
+final subtitle2 = TextStyle(fontSize: 14, fontWeight: FontWeight.w400);
 
 final primaryButton = ElevatedButton.styleFrom(
   backgroundColor: Colors.blue,
@@ -31,10 +16,7 @@ final primaryButton = ElevatedButton.styleFrom(
   shadowColor: Colors.black54,
   elevation: 5,
   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  textStyle: const TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  ),
+  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
 );
 
 final deleteButton = ElevatedButton.styleFrom(
@@ -43,10 +25,7 @@ final deleteButton = ElevatedButton.styleFrom(
   shadowColor: Colors.black54,
   elevation: 5,
   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  textStyle: const TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.bold,
-  ),
+  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
 );
 
 final secondaryButton = ElevatedButton.styleFrom(
@@ -55,10 +34,7 @@ final secondaryButton = ElevatedButton.styleFrom(
   shadowColor: Colors.black45,
   elevation: 3,
   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-  textStyle: const TextStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.normal,
-  ),
+  textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal),
 );
 
 InputDecoration inputDecoration(String label, {bool required = false}) =>
@@ -66,11 +42,7 @@ InputDecoration inputDecoration(String label, {bool required = false}) =>
       label: Row(
         children: [
           Text(label),
-          if (required)
-            const Text(
-              ' *',
-              style: TextStyle(color: Colors.red),
-            ),
+          if (required) const Text(' *', style: TextStyle(color: Colors.red)),
         ],
       ),
       hintText: label,
