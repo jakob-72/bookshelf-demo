@@ -40,7 +40,7 @@ impl JWTEncoder {
             Ok(token) => Ok(token),
             Err(e) => Err(ApiError {
                 status: StatusCode::INTERNAL_SERVER_ERROR,
-                message: format!("Failed to generate token: {}", e),
+                message: format!("Failed to generate token: {e}"),
             }),
         }
     }

@@ -1,6 +1,6 @@
 use crate::iam::error::{ErrorType, IAMError};
-use actix_web::http::StatusCode;
 use actix_web::ResponseError;
+use actix_web::http::StatusCode;
 use std::error::Error;
 use std::fmt::Display;
 
@@ -38,7 +38,7 @@ impl From<IAMError> for ApiError {
         };
         Self {
             status: status_code,
-            message: format!("{}", value),
+            message: format!("{value}"),
         }
     }
 }

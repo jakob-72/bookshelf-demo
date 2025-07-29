@@ -1,6 +1,6 @@
 use crate::iam;
-use crate::iam::error::{ErrorType, IAMError};
 use crate::iam::IdentityAndAccessManagement;
+use crate::iam::error::{ErrorType, IAMError};
 use crate::models::user::User;
 use async_std::sync::RwLock;
 use lazy_static::lazy_static;
@@ -33,7 +33,7 @@ impl IdentityAndAccessManagement for InMemoryIAM {
 
         match user.verify_password(password) {
             true => {
-                debug!("User logged in: {:?}", user);
+                debug!("User logged in: {user:?}");
                 Ok(user)
             }
             false => Err(IAMError {

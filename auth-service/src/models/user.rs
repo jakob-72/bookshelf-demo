@@ -29,7 +29,7 @@ impl User {
     /// Verify a password against the stored hashed password.
     pub fn verify_password(&self, password: &str) -> bool {
         bcrypt::verify(password, &self.hashed_password).unwrap_or_else(|e| {
-            warn!("Failed to verify password: {}", e);
+            warn!("Failed to verify password: {e}");
             false
         })
     }
