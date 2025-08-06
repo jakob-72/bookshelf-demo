@@ -28,14 +28,14 @@ Hardcoded credentials for the `auth-service` are for development and testing pur
 ### Using Docker Compose
 
 Ensure you have [Docker](https://docs.docker.com/get-docker/)
-or [Podman](https://podman.io/getting-started/installation) installed, then run:
+or [Podman](https://podman.io/getting-started/installation) installed and running, then call:
 
 ```bash
-docker compose up
+docker|podman compose up
 ```
 
 This will build and start both the `auth-service` and `bookshelf-service`. Further this configuration will build
-the `bookshelf_app` Flutter application for web and run it on http://localhost:8080.
+the `bookshelf_app` Flutter application for web and servce it via nginx on http://localhost:8080.
 
 ### Manual Setup
 
