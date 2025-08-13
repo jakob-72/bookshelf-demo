@@ -6,10 +6,19 @@ A simple demo application that demonstrates how to build a distributed full-stac
 
 ```mermaid
 graph TD
-    A[bookshelf_app] -->|requests| B[bookshelf-service]
-    A -->|requests| C[auth-service]
-    C -->|uses| db1[(IAM)]
-    B -->|uses| db2[(Books DB)]
+    subgraph Client
+        A["bookshelf_app (Flutter)"]
+    end
+    subgraph API
+        B["bookshelf-service (Go)"]
+        C["auth-service (Rust)"]
+        db1[(IAM Provider/\nDatabase)]
+        db2[(Books DB)]
+    end
+    A -- User Auth Request --> C
+    A -- " Book Management Request\n(with JWT) " --> B
+    C <-- Validate Credentials --> db1
+    B <-- CRUD Books --> db2
 ```
 
 The `bookshelf_app` is the client-facing Flutter application that provides a UI for users to authenticate and
@@ -31,11 +40,17 @@ Ensure you have [Docker](https://docs.docker.com/get-docker/)
 or [Podman](https://podman.io/getting-started/installation) installed and running, then call:
 
 ```bash
-docker|podman compose up
+docker compose up
+```
+
+or
+
+```bash
+podman compose up
 ```
 
 This will build and start both the `auth-service` and `bookshelf-service`. Further this configuration will build
-the `bookshelf_app` Flutter application for web and servce it via nginx on http://localhost:8080.
+the `bookshelf_app` Flutter application for web and serve it via nginx on http://localhost:8080.
 
 ### Manual Setup
 
