@@ -9,16 +9,18 @@ graph TD
     subgraph Client
         A["bookshelf_app (Flutter)"]
     end
-    subgraph API
-        B["bookshelf-service (Go)"]
-        C["auth-service (Rust)"]
-        db1[(IAM Provider/\nDatabase)]
-        db2[(Books DB)]
-    end
-    A -- User Auth Request --> C
-    A -- " Book Management Request\n(with JWT) " --> B
-    C <-- Validate Credentials --> db1
-    B <-- CRUD Books --> db2
+subgraph API
+B["bookshelf-service (Go)"]
+C["auth-service (Rust)"]
+db1[("IAM Provider/
+        Database")]
+db2[(Books DB)]
+end
+A -- User Auth Request --> C
+A -- " Book Management Request
+(with JWT) " --> B
+C <-- Validate Credentials --> db1
+B <-- CRUD Books --> db2
 ```
 
 The `bookshelf_app` is the client-facing Flutter application that provides a UI for users to authenticate and
