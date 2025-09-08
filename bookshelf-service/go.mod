@@ -10,7 +10,7 @@ require (
 	github.com/samber/slog-fiber v1.18.0
 	github.com/stretchr/testify v1.11.1
 	gorm.io/driver/sqlite v1.6.0
-	gorm.io/gorm v1.30.2
+	gorm.io/gorm v1.30.5
 )
 
 require (
